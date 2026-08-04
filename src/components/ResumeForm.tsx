@@ -66,10 +66,14 @@ function AiAssistant({ forField, context, onSuggestionClick }: { forField: strin
           ? error
           : 'Unknown error while generating suggestions.';
       console.error('AI enhancement error:', message, error);
+      const isHiddenServerMessage =
+        error instanceof Error && /server components render/i.test(error.message);
       setError('Failed to get suggestions. Please try again.');
       toast({
         title: 'AI suggestion failed',
-        description: message,
+        description: isHiddenServerMessage
+          ? 'The server encountered an error. The full details were logged server-side — search Vercel function logs for "Detailed AI Error" (or "AI_TEXT_ENHANCEMENT_ERROR").'
+          : message,
       });
     } finally {
       setIsLoading(false);

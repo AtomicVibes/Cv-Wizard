@@ -122,30 +122,50 @@ function getFlows(): ReturnType<typeof buildFlows> {
   return flows;
 }
 
-function toActionError(err: unknown, operation: string): Error {
-  const apiKey = getGoogleGenAIApiKey();
-  if (!apiKey) {
-    return new Error(
-      `Missing Gemini API key. Set GEMINI_API_KEY (or GOOGLE_GENAI_API_KEY) in .env.local and in your Vercel project environment variables to use AI ${operation}.`
-    );
+// Logs EVERYTHING about a failed AI call to the server logs (Vercel function
+// logs), including Genkit-specific fields, so the real message is never hidden
+// behind Next.js's production digest.
+function logDetailedAiError(operation: string, error: unknown): void {
+  const details: Record<string, unknown> = {
+    operation,
+    name: error instanceof Error ? error.name : typeof error,
+    message: error instanceof Error ? error.message : error,
+  };
+  if (error instanceof Error) {
+    details.stack = error.stack;
+    // Genkit errors carry extra fields (status, source, detail, cause).
+    for (const key of ['status', 'source', 'detail', 'cause']) {
+      const value = (error as unknown as Record<string, unknown>)[key];
+      if (value !== undefined) details[key] = value;
+    }
   }
-  // Log the full error server-side before surfacing a clean message.
-  console.error(`AI ${operation} failed:`, err);
-  const message =
-    err instanceof Error && err.message
-      ? err.message
-      : 'Unknown error from the AI provider.';
-  return new Error(`AI ${operation} failed: ${message}`);
+  console.error('Detailed AI Error:', JSON.stringify(details, null, 2));
+  console.error('Raw error:', error);
 }
 
+// NOTE on the model: 'gemini-2.5-flash' is the valid, registered model name
+// for @genkit-ai/google-genai@1.20.0 (see its KNOWN_GEMINI_MODELS). The older
+// 'gemini-1.5-flash' is NOT registered in this version and would throw
+// "invalid model". Verified against the installed plugin registry.
 export async function enhanceText(
   input: EnhanceTextInput
 ): Promise<EnhanceTextOutput> {
   try {
+    const apiKey = getGoogleGenAIApiKey();
+    if (!apiKey) {
+      throw new Error(
+        'Missing Gemini API key. Set GEMINI_API_KEY (or GOOGLE_GENAI_API_KEY) in .env.local and in your Vercel project environment variables.'
+      );
+    }
     const {enhanceTextFlow} = getFlows();
     return await enhanceTextFlow(input);
-  } catch (err) {
-    throw toActionError(err, 'text enhancement');
+  } catch (error) {
+    logDetailedAiError('text enhancement', error);
+    const message =
+      error instanceof Error && error.message
+        ? error.message
+        : 'Unknown error from the AI provider.';
+    throw new Error(`AI_TEXT_ENHANCEMENT_ERROR: ${message}`);
   }
 }
 
@@ -153,9 +173,20 @@ export async function improveSummary(
   input: ImproveSummaryInput
 ): Promise<ImproveSummaryOutput> {
   try {
+    const apiKey = getGoogleGenAIApiKey();
+    if (!apiKey) {
+      throw new Error(
+        'Missing Gemini API key. Set GEMINI_API_KEY (or GOOGLE_GENAI_API_KEY) in .env.local and in your Vercel project environment variables.'
+      );
+    }
     const {improveSummaryFlow} = getFlows();
     return await improveSummaryFlow(input);
-  } catch (err) {
-    throw toActionError(err, 'summary improvement');
+  } catch (error) {
+    logDetailedAiError('summary improvement', error);
+    const message =
+      error instanceof Error && error.message
+        ? error.message
+        : 'Unknown error from the AI provider.';
+    throw new Error(`AI_SUMMARY_IMPROVEMENT_ERROR: ${message}`);
   }
 }
