@@ -34,6 +34,7 @@ import type { ChangeEvent } from 'react';
 import type { Education, Experience, Language, Skill } from '@/lib/types';
 import Image from 'next/image';
 import { enhanceText, type EnhanceTextOutput, improveSummary, type ImproveSummaryOutput } from '@/ai/flows/text-enhancer';
+import { toast } from '@/hooks/use-toast';
 
 
 function AiAssistant({ forField, context, onSuggestionClick }: { forField: string, context: string, onSuggestionClick: (suggestion: string) => void }) {
@@ -47,16 +48,29 @@ function AiAssistant({ forField, context, onSuggestionClick }: { forField: strin
     setError(null);
     setSuggestions(null);
     try {
-      if (context === 'resume summary') {
-        const result = await improveSummary({ text: forField, role: '' });
-        setSuggestions(result);
-      } else {
-        const result = await enhanceText({ text: forField, context });
-        setSuggestions(result);
+      const result =
+        context === 'resume summary'
+          ? await improveSummary({ text: forField, role: '' })
+          : await enhanceText({ text: forField, context });
+
+      if (!result?.suggestions?.length) {
+        throw new Error('AI returned no suggestions');
       }
-    } catch (e) {
-      console.error(e);
+
+      setSuggestions(result);
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : typeof error === 'string'
+          ? error
+          : 'Unknown error while generating suggestions.';
+      console.error('AI enhancement error:', message, error);
       setError('Failed to get suggestions. Please try again.');
+      toast({
+        title: 'AI suggestion failed',
+        description: message,
+      });
     } finally {
       setIsLoading(false);
     }

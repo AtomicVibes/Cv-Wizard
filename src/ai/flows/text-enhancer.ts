@@ -51,7 +51,7 @@ export type ImproveSummaryOutput = z.infer<typeof ImproveSummaryOutputSchema>;
 
 const summaryPrompt = ai.definePrompt({
   name: 'improveSummaryPrompt',
-  model: googleAI.model('gemini-pro'),
+  model: googleAI.model('gemini-2.5-flash'),
   input: {schema: ImproveSummaryInputSchema},
   output: {schema: ImproveSummaryOutputSchema},
   prompt: `You are a senior resume writer and career coach. The user provided the following resume summary:
@@ -87,7 +87,7 @@ const prompt = ai.definePrompt({
   name: 'textEnhancerPrompt',
   // use the model helper exported by the google-genai package so the value
   // matches Genkit's expected ModelArgument type
-  model: googleAI.model('gemini-pro'),
+  model: googleAI.model('gemini-2.5-flash'),
   input: {schema: EnhanceTextInputSchema},
   output: {schema: EnhanceTextOutputSchema},
   prompt: `You are an expert resume writing assistant. Your task is to provide suggestions to improve a piece of text from a user's resume.
