@@ -7,7 +7,7 @@
  * - EnhanceTextOutput - The return type for the enhanceText function.
  */
 
-import {getGenkitAI, getGoogleGenAIApiKey} from '@/ai/genkit';
+import {assertGeminiApiKey, getGenkitAI} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/google-genai';
 import {z} from 'genkit';
 
@@ -139,8 +139,8 @@ function logDetailedAiError(operation: string, error: unknown): void {
       if (value !== undefined) details[key] = value;
     }
   }
-  console.error('Detailed AI Error:', JSON.stringify(details, null, 2));
-  console.error('Raw error:', error);
+  console.error('AI Generation Error details:', JSON.stringify(details, null, 2));
+  console.error('Raw AI error:', error);
 }
 
 // NOTE on the model: 'gemini-2.5-flash' is the valid, registered model name
@@ -150,13 +150,8 @@ function logDetailedAiError(operation: string, error: unknown): void {
 export async function enhanceText(
   input: EnhanceTextInput
 ): Promise<EnhanceTextOutput> {
+  assertGeminiApiKey();
   try {
-    const apiKey = getGoogleGenAIApiKey();
-    if (!apiKey) {
-      throw new Error(
-        'Missing Gemini API key. Set GEMINI_API_KEY (or GOOGLE_GENAI_API_KEY) in .env.local and in your Vercel project environment variables.'
-      );
-    }
     const {enhanceTextFlow} = getFlows();
     return await enhanceTextFlow(input);
   } catch (error) {
@@ -172,13 +167,8 @@ export async function enhanceText(
 export async function improveSummary(
   input: ImproveSummaryInput
 ): Promise<ImproveSummaryOutput> {
+  assertGeminiApiKey();
   try {
-    const apiKey = getGoogleGenAIApiKey();
-    if (!apiKey) {
-      throw new Error(
-        'Missing Gemini API key. Set GEMINI_API_KEY (or GOOGLE_GENAI_API_KEY) in .env.local and in your Vercel project environment variables.'
-      );
-    }
     const {improveSummaryFlow} = getFlows();
     return await improveSummaryFlow(input);
   } catch (error) {
