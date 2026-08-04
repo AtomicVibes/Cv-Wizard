@@ -177,8 +177,7 @@ export default function SignupPage() {
           </div>
 
           <div style={{
-            marginBottom: '25px',
-            position: 'relative'
+            marginBottom: '25px'
           }}>
             <label htmlFor="password" style={{
               display: 'block',
@@ -186,63 +185,67 @@ export default function SignupPage() {
               fontSize: '14px',
               color: '#ddd'
             }}>Password</label>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={{
-                width: '100%',
-                padding: '15px 20px',
-                paddingRight: '50px',
-                background: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '12px',
-                color: '#fff',
-                fontSize: '16px',
-                transition: 'all 0.3s ease'
-              }}
-              onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
-                e.currentTarget.style.borderColor = '#74b9ff';
-                e.currentTarget.style.boxShadow = '0 0 0 2px rgba(116, 185, 255, 0.2)';
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
-                e.currentTarget.parentElement!.style.transform = 'translateY(-5px)';
-              }}
-              onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                e.currentTarget.style.boxShadow = 'none';
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.parentElement!.style.transform = 'translateY(0)';
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                right: '16px',
-                transform: 'translateY(-50%)',
-                background: 'transparent',
-                border: 'none',
-                padding: 0,
-                cursor: 'pointer',
-                color: '#fff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center'
+            }}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  padding: '15px 20px',
+                  paddingRight: '50px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '12px',
+                  color: '#fff',
+                  fontSize: '16px',
+                  transition: 'all 0.3s ease'
+                }}
+                onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
+                  e.currentTarget.style.borderColor = '#74b9ff';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(116, 185, 255, 0.2)';
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                  e.currentTarget.parentElement!.style.transform = 'translateY(-5px)';
+                }}
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.parentElement!.style.transform = 'translateY(0)';
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                style={{
+                  position: 'absolute',
+                  right: '16px',
+                  background: 'transparent',
+                  border: 'none',
+                  padding: 0,
+                  cursor: 'pointer',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100%'
+                }}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
 
           <div style={{
-            marginBottom: '25px',
-            position: 'relative'
+            marginBottom: '25px'
           }}>
             <label htmlFor="confirmPassword" style={{
               display: 'block',
@@ -250,58 +253,63 @@ export default function SignupPage() {
               fontSize: '14px',
               color: '#ddd'
             }}>Confirm Password</label>
-            <input
-              type={showConfirmPassword ? 'text' : 'password'}
-              id="confirmPassword"
-              placeholder="Confirm your password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              style={{
-                width: '100%',
-                padding: '15px 20px',
-                paddingRight: '50px',
-                background: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '12px',
-                color: '#fff',
-                fontSize: '16px',
-                transition: 'all 0.3s ease'
-              }}
-              onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
-                e.currentTarget.style.borderColor = '#74b9ff';
-                e.currentTarget.style.boxShadow = '0 0 0 2px rgba(116, 185, 255, 0.2)';
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
-                e.currentTarget.parentElement!.style.transform = 'translateY(-5px)';
-              }}
-              onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                e.currentTarget.style.boxShadow = 'none';
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.parentElement!.style.transform = 'translateY(0)';
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword((prev) => !prev)}
-              aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                right: '16px',
-                transform: 'translateY(-50%)',
-                background: 'transparent',
-                border: 'none',
-                padding: 0,
-                cursor: 'pointer',
-                color: '#fff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center'
+            }}>
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                id="confirmPassword"
+                placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  padding: '15px 20px',
+                  paddingRight: '50px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '12px',
+                  color: '#fff',
+                  fontSize: '16px',
+                  transition: 'all 0.3s ease'
+                }}
+                onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
+                  e.currentTarget.style.borderColor = '#74b9ff';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(116, 185, 255, 0.2)';
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                  e.currentTarget.parentElement!.style.transform = 'translateY(-5px)';
+                }}
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.parentElement!.style.transform = 'translateY(0)';
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                style={{
+                  position: 'absolute',
+                  right: '16px',
+                  background: 'transparent',
+                  border: 'none',
+                  padding: 0,
+                  cursor: 'pointer',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100%'
+                }}
+              >
+                {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
 
           <button

@@ -186,8 +186,7 @@ export default function LoginPage() {
           </div>
 
           <div style={{
-            marginBottom: '25px',
-            position: 'relative'
+            marginBottom: '25px'
           }}>
             <label htmlFor="password" style={{
               display: 'block',
@@ -195,56 +194,61 @@ export default function LoginPage() {
               fontSize: '14px',
               color: '#ddd'
             }}>Password</label>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={{
-                width: '100%',
-                padding: '15px 20px',
-                paddingRight: '50px',
-                background: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '12px',
-                color: '#fff',
-                fontSize: '16px',
-                transition: 'all 0.3s ease'
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = '#74b9ff';
-                e.target.style.boxShadow = '0 0 0 2px rgba(116, 185, 255, 0.2)';
-                e.target.style.background = 'rgba(255, 255, 255, 0.15)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                e.target.style.boxShadow = 'none';
-                e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                right: '16px',
-                transform: 'translateY(-50%)',
-                background: 'transparent',
-                border: 'none',
-                padding: 0,
-                cursor: 'pointer',
-                color: '#fff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center'
+            }}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  padding: '15px 20px',
+                  paddingRight: '50px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '12px',
+                  color: '#fff',
+                  fontSize: '16px',
+                  transition: 'all 0.3s ease'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#74b9ff';
+                  e.target.style.boxShadow = '0 0 0 2px rgba(116, 185, 255, 0.2)';
+                  e.target.style.background = 'rgba(255, 255, 255, 0.15)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  e.target.style.boxShadow = 'none';
+                  e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                style={{
+                  position: 'absolute',
+                  right: '16px',
+                  background: 'transparent',
+                  border: 'none',
+                  padding: 0,
+                  cursor: 'pointer',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100%'
+                }}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
 
           <button
