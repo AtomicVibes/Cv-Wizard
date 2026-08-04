@@ -29,7 +29,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { PlusCircle, Trash2, User, Briefcase, GraduationCap, Sparkles, Languages as LanguagesIcon, FileText, Upload, Wand2, Loader2, RefreshCw, Check, X, Combine } from 'lucide-react';
+import { PlusCircle, Trash2, User, Briefcase, GraduationCap, Sparkles, Languages as LanguagesIcon, FileText, Upload, Wand2, Loader2, RefreshCw, Check, X, Combine, ChevronDown, SlidersHorizontal } from 'lucide-react';
 import type { ChangeEvent } from 'react';
 import type { Education, Experience, Language, Skill } from '@/lib/types';
 import Image from 'next/image';
@@ -66,6 +66,9 @@ function AiAssistant({
   const [suggestionItems, setSuggestionItems] = useState<SuggestionItem[]>([]);
   const [combinedText, setCombinedText] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showTailor, setShowTailor] = useState(false);
+  const [focusContext, setFocusContext] = useState('');
+  const [jobDescriptionInput, setJobDescriptionInput] = useState('');
 
   const isExperience = Boolean(jobContext);
 
@@ -121,6 +124,8 @@ function AiAssistant({
           company: jobContext.company,
           city: jobContext.city,
           text: forField,
+          focusContext,
+          jobDescription: jobDescriptionInput,
           excludedSuggestions: suggestionItems.map(item => item.text),
         });
         if (!result?.suggestions?.length) {
@@ -128,13 +133,23 @@ function AiAssistant({
         }
         appendFreshSuggestions(result.suggestions);
       } else if (context === 'resume summary') {
-        const result = await improveSummary({ text: forField, role: '' });
+        const result = await improveSummary({
+          text: forField,
+          role: '',
+          focusContext,
+          jobDescription: jobDescriptionInput,
+        });
         if (!result?.suggestions?.length) {
           throw new Error('AI returned no suggestions');
         }
         replaceSuggestions(result.suggestions);
       } else {
-        const result = await enhanceText({ text: forField, context });
+        const result = await enhanceText({
+          text: forField,
+          context,
+          focusContext,
+          jobDescription: jobDescriptionInput,
+        });
         if (!result?.suggestions?.length) {
           throw new Error('AI returned no suggestions');
         }
@@ -160,6 +175,8 @@ function AiAssistant({
       const result = await combineExperienceSuggestions({
         jobTitle: jobContext.jobTitle,
         company: jobContext.company,
+        focusContext,
+        jobDescription: jobDescriptionInput,
         suggestions: suggestionItems.map(item => item.text),
       });
       if (!result?.text) {
@@ -201,6 +218,47 @@ function AiAssistant({
                 ? `Role-specific tasks for ${jobContext?.jobTitle || 'this position'}.`
                 : `Suggestions to improve your ${context}.`}
             </p>
+          </div>
+          <div className="space-y-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-between px-2 text-muted-foreground"
+              onClick={() => setShowTailor(prev => !prev)}
+              type="button"
+            >
+              <span className="flex items-center gap-1.5">
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+                Tailor suggestions
+              </span>
+              <ChevronDown
+                className={`h-3.5 w-3.5 transition-transform ${showTailor ? 'rotate-180' : ''}`}
+              />
+            </Button>
+            {showTailor && (
+              <div className="grid gap-2 rounded-md border p-2">
+                <div className="space-y-1">
+                  <Label className="text-xs text-muted-foreground">Focus / Context (optional)</Label>
+                  <Textarea
+                    value={focusContext}
+                    onChange={e => setFocusContext(e.target.value)}
+                    placeholder="e.g. Emphasize leadership, highlight Python and cloud migration"
+                    rows={2}
+                    className="text-xs"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs text-muted-foreground">Job description URL or text (optional)</Label>
+                  <Textarea
+                    value={jobDescriptionInput}
+                    onChange={e => setJobDescriptionInput(e.target.value)}
+                    placeholder="Paste the job posting text or a URL to it"
+                    rows={2}
+                    className="text-xs"
+                  />
+                </div>
+              </div>
+            )}
           </div>
           <div className="grid gap-2">
             {isLoading && <div className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /><span>Generating ideas...</span></div>}

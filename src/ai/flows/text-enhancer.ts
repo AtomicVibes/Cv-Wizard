@@ -18,6 +18,8 @@ const EnhanceTextInputSchema = z.object({
     .describe(
       'The context of the text (e.g., "resume summary", "job description").'
     ),
+  focusContext: z.string().optional().default('').describe('User-provided instructions to steer the suggestions (e.g., "emphasize leadership").'),
+  jobDescription: z.string().optional().default('').describe('A target job posting text or a URL to one, used to tailor suggestions.'),
 });
 export type EnhanceTextInput = z.infer<typeof EnhanceTextInputSchema>;
 
@@ -35,6 +37,8 @@ export type EnhanceTextOutput = z.infer<typeof EnhanceTextOutputSchema>;
 const ImproveSummaryInputSchema = z.object({
   text: z.string().describe('The resume summary text to improve.'),
   role: z.string().optional().describe('Optional target role or industry.'),
+  focusContext: z.string().optional().default('').describe('User-provided instructions to steer the suggestions.'),
+  jobDescription: z.string().optional().default('').describe('A target job posting text or a URL to one, used to tailor suggestions.'),
 });
 export type ImproveSummaryInput = z.infer<typeof ImproveSummaryInputSchema>;
 
@@ -49,6 +53,8 @@ const EnhanceExperienceInputSchema = z.object({
   company: z.string().optional().default('').describe('The company or employer name.'),
   city: z.string().optional().default('').describe('The city or location of the position.'),
   text: z.string().optional().default('').describe('The current job description text (may be empty).'),
+  focusContext: z.string().optional().default('').describe('User-provided instructions to steer the suggestions (e.g., "highlight Python and cloud migration").'),
+  jobDescription: z.string().optional().default('').describe('A target job posting text or a URL to one, used to tailor suggestions.'),
   excludedSuggestions: z
     .array(z.string())
     .optional()
@@ -67,6 +73,8 @@ export type EnhanceExperienceOutput = z.infer<typeof EnhanceExperienceOutputSche
 const CombineExperienceInputSchema = z.object({
   jobTitle: z.string().optional().default('').describe('The job title of the position.'),
   company: z.string().optional().default('').describe('The company or employer name.'),
+  focusContext: z.string().optional().default('').describe('User-provided instructions to steer the combined text.'),
+  jobDescription: z.string().optional().default('').describe('A target job posting text or a URL to one, used to tailor the combined text.'),
   suggestions: z
     .array(z.string())
     .describe('The user-selected suggestion bullets to synthesize into one cohesive job description block.'),
@@ -77,6 +85,42 @@ const CombineExperienceOutputSchema = z.object({
   text: z.string().describe('A single cohesive, ATS-friendly job description block synthesized from the given suggestions.'),
 });
 export type CombineExperienceOutput = z.infer<typeof CombineExperienceOutputSchema>;
+
+const MAX_JOB_DESCRIPTION_LENGTH = 12000;
+
+// If the user pasted a URL, fetch it server-side and extract readable text.
+// If the fetch fails or the input is plain text, fall back to the raw value so
+// the prompt always receives something usable.
+async function resolveJobDescriptionText(jobDescription: string): Promise<string> {
+  if (!jobDescription) return '';
+  const trimmed = jobDescription.trim();
+  if (!/^https?:\/\//i.test(trimmed)) {
+    return trimmed.slice(0, MAX_JOB_DESCRIPTION_LENGTH);
+  }
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    const response = await fetch(trimmed, {
+      signal: controller.signal,
+      headers: {'user-agent': 'Mozilla/5.0 (compatible; CvWizard/1.0)'},
+    });
+    clearTimeout(timeout);
+    if (!response.ok) return trimmed;
+    const html = await response.text();
+    const text = html
+      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/&amp;/gi, '&')
+      .replace(/\s+/g, ' ')
+      .trim();
+    return text.slice(0, MAX_JOB_DESCRIPTION_LENGTH);
+  } catch (error) {
+    console.warn('Failed to fetch job description URL, using raw input:', error);
+    return trimmed.slice(0, MAX_JOB_DESCRIPTION_LENGTH);
+  }
+}
 
 function buildFlows() {
   const ai = getGenkitAI();
@@ -93,9 +137,15 @@ function buildFlows() {
 
 If a target role or industry is provided, tailor the rewrite to that role: "{{{role}}}".
 
+USER FOCUS INSTRUCTIONS (heavily weighted — follow these above all else; empty if none):
+{{{focusContext}}}
+
+TARGET JOB POSTING (tailor wording and keywords to this posting; empty if none):
+{{{jobDescription}}}
+
 Provide a single polished, concise rewritten summary (1-2 sentences) optimized for recruiters and ATS as the first output item. Then provide 3 short bullet suggestions (each 8-12 words) for improvements, keywords, or alternate phrasings.
 
-Focus on clarity, strong action verbs, measurable impact, and relevant keywords. Return exactly one rewritten summary followed by three bullets as separate items in the output array.
+Focus on clarity, strong action verbs, measurable impact, and relevant keywords. Reflect the user focus instructions and the target job posting's required skills and language in the summary and suggestions. Return exactly one rewritten summary followed by three bullets as separate items in the output array.
 `,
   });
 
@@ -106,7 +156,8 @@ Focus on clarity, strong action verbs, measurable impact, and relevant keywords.
       outputSchema: ImproveSummaryOutputSchema,
     },
     async input => {
-      const {output} = await summaryPrompt(input);
+      const resolved = await resolveJobDescriptionText(input.jobDescription);
+      const {output} = await summaryPrompt({...input, jobDescription: resolved});
       return output!;
     }
   );
@@ -126,9 +177,16 @@ The user has provided the following text:
 
 This text is for the "{{{context}}}" section of their resume.
 
+USER FOCUS INSTRUCTIONS (heavily weighted — follow these above all else; empty if none):
+{{{focusContext}}}
+
+TARGET JOB POSTING (tailor wording and keywords to this posting; empty if none):
+{{{jobDescription}}}
+
 Please analyze the text and provide 3 to 5 clear, concise, and actionable suggestions for improvement.
 Focus on correcting spelling and grammar, improving clarity, strengthening action verbs, and making the content more impactful.
 Each suggestion should be a complete thought. If suggesting a rewrite, provide the full rewritten sentence.
+Reflect the user focus instructions and the target job posting's required skills and language in every suggestion.
 
 Return your suggestions in the required output format.`,
   });
@@ -140,7 +198,8 @@ Return your suggestions in the required output format.`,
       outputSchema: EnhanceTextOutputSchema,
     },
     async input => {
-      const {output} = await prompt(input);
+      const resolved = await resolveJobDescriptionText(input.jobDescription);
+      const {output} = await prompt({...input, jobDescription: resolved});
       return output!;
     }
   );
@@ -159,11 +218,18 @@ POSITION CONTEXT:
 - Existing description: """{{{text}}}"""
 - Suggestions already shown to the user (DO NOT repeat these): {{{excludedSuggestions}}}
 
+USER FOCUS INSTRUCTIONS (heavily weighted — every bullet must reflect these; empty if none):
+{{{focusContext}}}
+
+TARGET JOB POSTING (tailor every suggestion to this posting's required skills, keywords, and phrasing; empty if none):
+{{{jobDescription}}}
+
 TASK: Write exactly 4 distinct, ready-to-paste responsibility descriptions for THIS specific position. Each one must:
 - Open with a strong action verb (shipped, built, cut, led, launched, automated, owned, negotiated, redesigned, grew, restructured, resolved) and read like real work, not a template.
 - Be specific to the job title, company, and industry.
 - Include a concrete outcome, metric, or measurable impact where realistic.
 - Vary in sentence structure and length so the group sounds written by a human.
+- Directly address the user focus instructions and mirror the skills and language used in the target job posting. Heavily weight this guidance over generic phrasing.
 
 HARD RULES (ZERO AI FINGERPRINT):
 - Never use these or similar corporate filler words: delve, delve into, seamlessly, testament, leveraging, leverage, utilize, synergy, synergize, cutting-edge, robust, streamline, dynamic, passionate, world-class, best-in-class, state-of-the-art, empower, facilitate, foster, foster innovation, comprehensive, ultimately, furthermore, moreover, in order to.
@@ -181,7 +247,8 @@ Return exactly 4 items in the required output format.`,
       outputSchema: EnhanceExperienceOutputSchema,
     },
     async input => {
-      const {output} = await experiencePrompt(input);
+      const resolved = await resolveJobDescriptionText(input.jobDescription);
+      const {output} = await experiencePrompt({...input, jobDescription: resolved});
       return output!;
     }
   );
@@ -197,10 +264,16 @@ POSITION: {{{jobTitle}}} at {{{company}}}
 USER-SELECTED BULLETS TO SYNTHESIZE:
 {{{suggestions}}}
 
+USER FOCUS INSTRUCTIONS (heavily weighted — reflect these in the combined text; empty if none):
+{{{focusContext}}}
+
+TARGET JOB POSTING (tailor the combined text to this posting's required skills and keywords; empty if none):
+{{{jobDescription}}}
+
 TASK: Synthesize the selected bullets into a single, cohesive job description block for the role. Follow this strict format:
 1. A 1-sentence role overview that summarizes the scope.
 2. 3-5 refined bullets, each opening with a strong action verb and keeping the specific outcomes from the source bullets.
-Merge overlapping ideas, remove repetition, and smooth the flow so the whole block reads as one human-written description.
+Merge overlapping ideas, remove repetition, and smooth the flow so the whole block reads as one human-written description. Heavily weight the user focus instructions and the target job posting's language and required skills.
 
 HARD RULES (ZERO AI FINGERPRINT):
 - Never use filler/corporate words: delve, seamlessly, testament, leveraging, utilize, synergy, cutting-edge, robust, streamline, dynamic, passionate, world-class, best-in-class, state-of-the-art, empower, facilitate, foster, foster growth, comprehensive, ultimately.
@@ -218,7 +291,8 @@ Return only the final joined text in the required output format.`,
       outputSchema: CombineExperienceOutputSchema,
     },
     async input => {
-      const {output} = await combinePrompt(input);
+      const resolved = await resolveJobDescriptionText(input.jobDescription);
+      const {output} = await combinePrompt({...input, jobDescription: resolved});
       return output!;
     }
   );
