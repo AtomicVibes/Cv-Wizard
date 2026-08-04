@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { createContext, useContext, useReducer, useState, useEffect, useMemo } from 'react';
-import type { ResumeData, LanguageOption, TemplateOption, Section, FontOption } from '@/lib/types';
+import type { ResumeData, LanguageOption, TemplateOption, Section, FontOption, Experience } from '@/lib/types';
 import { translations } from '@/lib/translations';
 import { fontOptions } from '@/lib/fonts';
 import { createAppwriteInstances, saveResumeData, loadResumeData, transformAppwriteDataToUI } from '@/lib/appwrite';
@@ -63,6 +63,25 @@ const createExperienceItem = (previousExperience?: any) => {
   return experienceItem;
 };
 
+// --- CHRONOLOGICAL DATE CASCADING (Experience) ---
+// The list is ordered newest-first (index 0 = most recent).
+// - The top entry's end date is always "Present".
+// - Every entry below it has its end date chained to the start date of the
+//   entry immediately above it, producing a seamless, gap-free timeline.
+const cascadeExperienceDates = (items: Experience[]): Experience[] => {
+  if (items.length === 0) return items;
+  return items.map((item, index) => {
+    if (index === 0) {
+      return item.endDate === 'Present' ? item : { ...item, endDate: 'Present' };
+    }
+    const previous = items[index - 1];
+    if (previous.startDate && previous.startDate !== item.endDate) {
+      return { ...item, endDate: previous.startDate };
+    }
+    return item;
+  });
+};
+
 // --- ACTION TYPES ---
 type Action =
   | { type: 'UPDATE_FIELD'; section: 'personalInfo' | 'summary'; payload: { field: string; value: any } }
@@ -86,13 +105,18 @@ const resumeReducer = (state: ResumeData, action: Action): ResumeData => {
         ...state,
         personalInfo: { ...state.personalInfo, [action.payload.field]: action.payload.value },
       };
-    case 'UPDATE_ITEM':
+    case 'UPDATE_ITEM': {
+      const updatedItems = state[action.section].map((item: any) =>
+        item.id === action.payload.id ? { ...item, [action.payload.field]: action.payload.value } : item
+      );
       return {
         ...state,
-        [action.section]: state[action.section].map((item: any) =>
-          item.id === action.payload.id ? { ...item, [action.payload.field]: action.payload.value } : item
-        ),
+        [action.section]:
+          action.section === 'experience'
+            ? cascadeExperienceDates(updatedItems)
+            : updatedItems,
       };
+    }
     case 'ADD_ITEM': {
       let newItem: any = { id: crypto.randomUUID() };
       switch (action.section) {
@@ -113,26 +137,35 @@ const resumeReducer = (state: ResumeData, action: Action): ResumeData => {
         ...state,
         [action.section]:
           action.section === 'experience'
-            ? [newItem, ...state.experience]
+            ? cascadeExperienceDates([newItem, ...state.experience])
             : [...state[action.section], newItem],
       };
     }
-    case 'REMOVE_ITEM':
+case 'REMOVE_ITEM': {
+      const remainingItems = state[action.section].filter((item: any) => item.id !== action.payload.id);
       return {
         ...state,
-        [action.section]: state[action.section].filter((item: any) => item.id !== action.payload.id),
+        [action.section]:
+          action.section === 'experience'
+            ? cascadeExperienceDates(remainingItems as Experience[])
+            : remainingItems,
       };
-    case 'SET_PHOTO':
+    }
+case 'SET_PHOTO':
         return {
             ...state,
             personalInfo: { ...state.personalInfo, photo: action.payload.photo }
         }
-    case 'SET_RESUME_DATA':
-      return action.payload;
+case 'SET_RESUME_DATA':
+      return {
+        ...action.payload,
+        experience: cascadeExperienceDates(action.payload.experience ?? []),
+      };
     case 'SET_ACTIVE_RESUME':
-      return action.payload.resume;
-    case 'SET_ACTIVE_RESUME':
-      return action.payload.resume;
+      return {
+        ...action.payload.resume,
+        experience: cascadeExperienceDates(action.payload.resume.experience ?? []),
+      };
     default:
       return state;
   }
