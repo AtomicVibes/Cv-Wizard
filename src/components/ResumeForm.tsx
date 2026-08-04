@@ -29,7 +29,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { PlusCircle, Trash2, User, Briefcase, GraduationCap, Sparkles, Languages as LanguagesIcon, FileText, Upload, Wand2, Loader2 } from 'lucide-react';
+import { PlusCircle, Trash2, User, Briefcase, GraduationCap, Sparkles, Languages as LanguagesIcon, FileText, Upload, Wand2, Loader2, RefreshCw, Check } from 'lucide-react';
 import type { ChangeEvent } from 'react';
 import type { Education, Experience, Language, Skill } from '@/lib/types';
 import Image from 'next/image';
@@ -76,6 +76,11 @@ function AiAssistant({ forField, context, onSuggestionClick }: { forField: strin
     }
   };
 
+  const applySuggestion = (suggestion: string) => {
+    onSuggestionClick(suggestion);
+    setIsOpen(false);
+  };
+
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
@@ -102,10 +107,40 @@ function AiAssistant({ forField, context, onSuggestionClick }: { forField: strin
             {isLoading && <div className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /><span>Generating ideas...</span></div>}
             {error && <p className="text-sm text-destructive">{error}</p>}
             {suggestions?.suggestions.map((suggestion, index) => (
-              <div key={index} className="text-sm p-2 bg-muted/50 rounded-md cursor-pointer hover:bg-muted" onClick={() => onSuggestionClick(suggestion)}>
-                {suggestion}
+              <div key={index} className="text-sm p-2 bg-muted/50 rounded-md">
+                <p
+                  className="cursor-pointer hover:text-accent-foreground"
+                  onClick={() => applySuggestion(suggestion)}
+                  title="Click to apply"
+                >
+                  {suggestion}
+                </p>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="mt-2 w-full"
+                  onClick={() => applySuggestion(suggestion)}
+                  disabled={isLoading}
+                >
+                  <Check className="h-3.5 w-3.5" />
+                  Apply
+                </Button>
               </div>
             ))}
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full"
+              onClick={handleEnhance}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <RefreshCw className="h-3.5 w-3.5" />
+              )}
+              New Suggestion
+            </Button>
           </div>
         </div>
       </PopoverContent>
