@@ -45,6 +45,24 @@ const DEFAULT_UI_DATA: ResumeData = {
   languages: [{ id: 'l1', name: 'English', proficiency: 'Native' as const }],
 };
 
+const createExperienceItem = (previousExperience?: any) => {
+  const experienceItem: any = {
+    id: crypto.randomUUID(),
+    title: '',
+    company: '',
+    city: '',
+    description: '',
+    endDate: 'Present',
+    startDate: '',
+  };
+
+  if (previousExperience && typeof previousExperience.endDate === 'string' && previousExperience.endDate && previousExperience.endDate !== 'Present') {
+    experienceItem.startDate = previousExperience.endDate;
+  }
+
+  return experienceItem;
+};
+
 // --- ACTION TYPES ---
 type Action =
   | { type: 'UPDATE_FIELD'; section: 'personalInfo' | 'summary'; payload: { field: string; value: any } }
@@ -76,24 +94,27 @@ const resumeReducer = (state: ResumeData, action: Action): ResumeData => {
         ),
       };
     case 'ADD_ITEM': {
-      const newItem: any = { id: crypto.randomUUID() };
+      let newItem: any = { id: crypto.randomUUID() };
       switch (action.section) {
         case 'experience':
-          newItem.title = ''; newItem.company = ''; newItem.city = ''; newItem.startDate = ''; newItem.endDate = ''; newItem.description = '';
+          newItem = createExperienceItem(state.experience[0]);
           break;
         case 'education':
-          newItem.institution = ''; newItem.degree = ''; newItem.city = ''; newItem.startDate = ''; newItem.endDate = '';
+          newItem = { id: crypto.randomUUID(), institution: '', degree: '', city: '', startDate: '', endDate: '' };
           break;
         case 'skills':
-          newItem.name = '';
+          newItem = { id: crypto.randomUUID(), name: '' };
           break;
         case 'languages':
-          newItem.name = ''; newItem.proficiency = 'Intermediate';
+          newItem = { id: crypto.randomUUID(), name: '', proficiency: 'Intermediate' };
           break;
       }
       return {
         ...state,
-        [action.section]: [...state[action.section], newItem],
+        [action.section]:
+          action.section === 'experience'
+            ? [newItem, ...state.experience]
+            : [...state[action.section], newItem],
       };
     }
     case 'REMOVE_ITEM':
