@@ -38,6 +38,10 @@ import { toast } from '@/hooks/use-toast';
 
 const AI_ERROR_MESSAGE =
   'AI suggestions are not available at this moment, try again later.';
+// Matches the message returned by the server action ('fail' in text-enhancer)
+// when the Gemini API is rate-limited after all retries. Must stay in sync.
+const RATE_LIMIT_MESSAGE =
+  'AI suggestions are temporarily busy due to high traffic. Please wait a moment and try again.';
 
 interface SuggestionItem {
   id: string;
@@ -85,10 +89,15 @@ function AiAssistant({
       message,
       stack: error instanceof Error ? error.stack : undefined,
     });
-    setError(AI_ERROR_MESSAGE);
+    setError(error instanceof Error && error.message === RATE_LIMIT_MESSAGE
+      ? RATE_LIMIT_MESSAGE
+      : AI_ERROR_MESSAGE);
     toast({
       title: 'AI suggestions unavailable',
-      description: AI_ERROR_MESSAGE,
+      description:
+        error instanceof Error && error.message === RATE_LIMIT_MESSAGE
+          ? RATE_LIMIT_MESSAGE
+          : AI_ERROR_MESSAGE,
       variant: 'destructive',
     });
   };

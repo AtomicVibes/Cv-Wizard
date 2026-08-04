@@ -95,6 +95,66 @@ type ActionResult<T> =
 
 const MAX_JOB_DESCRIPTION_LENGTH = 12000;
 
+const RATE_LIMIT_MESSAGE =
+  'AI suggestions are temporarily busy due to high traffic. Please wait a moment and try again.';
+
+// --- Retry / backoff for transient quota errors ---
+const MAX_RETRY_ATTEMPTS = 3; // initial attempt + 2 retries
+const BACKOFF_BASE_MS = 2000;
+const BACKOFF_MAX_MS = 6000;
+
+// 429 rate limits surface in several shapes: an HTTP status code, a Genkit
+// status field, or a message describing the quota error.
+function isRateLimitError(error: unknown): boolean {
+  const statusLike = error as {status?: unknown; code?: unknown} | null;
+  const code =
+    typeof statusLike?.status === 'number'
+      ? statusLike.status
+      : typeof statusLike?.code === 'number'
+        ? statusLike.code
+        : undefined;
+  const message = error instanceof Error ? error.message : String(error);
+  return (
+    code === 429 ||
+    /(?:429|RESOURCE_EXHAUSTED|quota|rate limit|too many requests)/i.test(message)
+  );
+}
+
+// The API often states exactly when the bucket refills ("Please retry in 3.8s");
+// honor that hint so we never retry too early or wait longer than needed.
+function suggestedRetryDelayMs(error: unknown): number | null {
+  if (!(error instanceof Error)) return null;
+  const match = error.message.match(/retry in (\d+(?:\.\d+)?)s/i);
+  if (!match) return null;
+  const seconds = Number(match[1]);
+  return Number.isFinite(seconds) ? Math.round(seconds * 1000) : null;
+}
+
+async function retryWithBackoff<T>(task: () => Promise<T>): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < MAX_RETRY_ATTEMPTS; attempt++) {
+    try {
+      return await task();
+    } catch (error) {
+      lastError = error;
+      if (!isRateLimitError(error) || attempt === MAX_RETRY_ATTEMPTS - 1) {
+        throw error;
+      }
+      const exponential = BACKOFF_BASE_MS * 2 ** attempt;
+      const hint = suggestedRetryDelayMs(error);
+      const delay = Math.min(
+        Math.max(hint ?? exponential, exponential),
+        BACKOFF_MAX_MS
+      );
+      console.warn(
+        `AI rate limit hit (attempt ${attempt + 1}), retrying in ${delay}ms`
+      );
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+  throw lastError;
+}
+
 // If the user pasted a URL, fetch it server-side and extract readable text.
 // If the fetch fails or the input is plain text, fall back to the raw value so
 // the prompt always receives something usable.
@@ -346,22 +406,29 @@ function logDetailedAiError(operation: string, error: unknown): void {
 // letting the exception escape the server action boundary.
 function fail<T>(operation: string, error: unknown, errorCode: string): ActionResult<T> {
   logDetailedAiError(operation, error);
+  if (isRateLimitError(error)) {
+    return {success: false, error: RATE_LIMIT_MESSAGE};
+  }
   const message =
     error instanceof Error && error.message ? error.message : 'Unknown error';
   return {success: false, error: `${errorCode}${message}`};
 }
 
-// NOTE on the model: 'gemini-2.5-flash' is the valid, registered model name
-// for @genkit-ai/google-genai@1.20.0 (see its KNOWN_GEMINI_MODELS). The older
-// 'gemini-1.5-flash' is NOT registered in this version and would throw
-// "invalid model". Verified against the installed plugin registry.
+// NOTE on the model: 'gemini-2.5-flash' is the only model verified working on
+// the active key for @genkit-ai/google-genai@1.20.0 (see KNOWN_GEMINI_MODELS in
+// the plugin sources). Model-picking probes on 2026-08-04 measured:
+//   - 'gemini-1.5-flash': NOT registered in this plugin version (invalid model).
+//   - 'gemini-2.0-flash':       429 quota exceeded, generateContent free-tier limit 0.
+//   - 'gemini-2.5-flash-lite':  404 "model no longer available to new users".
+// Transient 429 bursts on 2.5-flash instead are absorbed by retryWithBackoff,
+// which honors the API's "Please retry in Ns" hint before retrying.
 export async function enhanceText(
   input: EnhanceTextInput
 ): Promise<ActionResult<EnhanceTextOutput>> {
   try {
     assertGeminiApiKey();
     const {enhanceTextFlow} = getFlows();
-    return {success: true, data: await enhanceTextFlow(input)};
+    return {success: true, data: await retryWithBackoff(() => enhanceTextFlow(input))};
   } catch (error) {
     return fail<EnhanceTextOutput>('text enhancement', error, 'AI_TEXT_ENHANCEMENT_ERROR: ');
   }
@@ -373,7 +440,7 @@ export async function improveSummary(
   try {
     assertGeminiApiKey();
     const {improveSummaryFlow} = getFlows();
-    return {success: true, data: await improveSummaryFlow(input)};
+    return {success: true, data: await retryWithBackoff(() => improveSummaryFlow(input))};
   } catch (error) {
     return fail<ImproveSummaryOutput>('summary improvement', error, 'AI_SUMMARY_IMPROVEMENT_ERROR: ');
   }
@@ -385,7 +452,7 @@ export async function enhanceExperienceDescription(
   try {
     assertGeminiApiKey();
     const {enhanceExperienceFlow} = getFlows();
-    return {success: true, data: await enhanceExperienceFlow(input)};
+    return {success: true, data: await retryWithBackoff(() => enhanceExperienceFlow(input))};
   } catch (error) {
     return fail<EnhanceExperienceOutput>('experience description generation', error, 'AI_EXPERIENCE_DESCRIPTION_ERROR: ');
   }
@@ -397,7 +464,7 @@ export async function combineExperienceSuggestions(
   try {
     assertGeminiApiKey();
     const {combineExperienceFlow} = getFlows();
-    return {success: true, data: await combineExperienceFlow(input)};
+    return {success: true, data: await retryWithBackoff(() => combineExperienceFlow(input))};
   } catch (error) {
     return fail<CombineExperienceOutput>('experience suggestion combine', error, 'AI_EXPERIENCE_COMBINE_ERROR: ');
   }
