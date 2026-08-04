@@ -7,7 +7,7 @@
  * - EnhanceTextOutput - The return type for the enhanceText function.
  */
 
-import {ai} from '@/ai/genkit';
+import {getGenkitAI, getGoogleGenAIApiKey} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/google-genai';
 import {z} from 'genkit';
 
@@ -30,12 +30,6 @@ const EnhanceTextOutputSchema = z.object({
 });
 export type EnhanceTextOutput = z.infer<typeof EnhanceTextOutputSchema>;
 
-export async function enhanceText(
-  input: EnhanceTextInput
-): Promise<EnhanceTextOutput> {
-  return enhanceTextFlow(input);
-}
-
 // Improve resume summary flow inspired by resume-lm: produce a polished
 // rewritten summary and a short list of bullet improvements / keywords.
 const ImproveSummaryInputSchema = z.object({
@@ -49,12 +43,15 @@ const ImproveSummaryOutputSchema = z.object({
 });
 export type ImproveSummaryOutput = z.infer<typeof ImproveSummaryOutputSchema>;
 
-const summaryPrompt = ai.definePrompt({
-  name: 'improveSummaryPrompt',
-  model: googleAI.model('gemini-2.5-flash'),
-  input: {schema: ImproveSummaryInputSchema},
-  output: {schema: ImproveSummaryOutputSchema},
-  prompt: `You are a senior resume writer and career coach. The user provided the following resume summary:
+function buildFlows() {
+  const ai = getGenkitAI();
+
+  const summaryPrompt = ai.definePrompt({
+    name: 'improveSummaryPrompt',
+    model: googleAI.model('gemini-2.5-flash'),
+    input: {schema: ImproveSummaryInputSchema},
+    output: {schema: ImproveSummaryOutputSchema},
+    prompt: `You are a senior resume writer and career coach. The user provided the following resume summary:
 '''
 {{{text}}}
 '''
@@ -65,32 +62,28 @@ Provide a single polished, concise rewritten summary (1-2 sentences) optimized f
 
 Focus on clarity, strong action verbs, measurable impact, and relevant keywords. Return exactly one rewritten summary followed by three bullets as separate items in the output array.
 `,
-});
+  });
 
-const improveSummaryFlow = ai.defineFlow(
-  {
-    name: 'improveSummaryFlow',
-    inputSchema: ImproveSummaryInputSchema,
-    outputSchema: ImproveSummaryOutputSchema,
-  },
-  async input => {
-    const {output} = await summaryPrompt(input);
-    return output!;
-  }
-);
+  const improveSummaryFlow = ai.defineFlow(
+    {
+      name: 'improveSummaryFlow',
+      inputSchema: ImproveSummaryInputSchema,
+      outputSchema: ImproveSummaryOutputSchema,
+    },
+    async input => {
+      const {output} = await summaryPrompt(input);
+      return output!;
+    }
+  );
 
-export async function improveSummary(input: ImproveSummaryInput): Promise<ImproveSummaryOutput> {
-  return improveSummaryFlow(input);
-}
-
-const prompt = ai.definePrompt({
-  name: 'textEnhancerPrompt',
-  // use the model helper exported by the google-genai package so the value
-  // matches Genkit's expected ModelArgument type
-  model: googleAI.model('gemini-2.5-flash'),
-  input: {schema: EnhanceTextInputSchema},
-  output: {schema: EnhanceTextOutputSchema},
-  prompt: `You are an expert resume writing assistant. Your task is to provide suggestions to improve a piece of text from a user's resume.
+  const prompt = ai.definePrompt({
+    name: 'textEnhancerPrompt',
+    // use the model helper exported by the google-genai package so the value
+    // matches Genkit's expected ModelArgument type
+    model: googleAI.model('gemini-2.5-flash'),
+    input: {schema: EnhanceTextInputSchema},
+    output: {schema: EnhanceTextOutputSchema},
+    prompt: `You are an expert resume writing assistant. Your task is to provide suggestions to improve a piece of text from a user's resume.
 The user has provided the following text:
 '''
 {{{text}}}
@@ -103,16 +96,66 @@ Focus on correcting spelling and grammar, improving clarity, strengthening actio
 Each suggestion should be a complete thought. If suggesting a rewrite, provide the full rewritten sentence.
 
 Return your suggestions in the required output format.`,
-});
+  });
 
-const enhanceTextFlow = ai.defineFlow(
-  {
-    name: 'enhanceTextFlow',
-    inputSchema: EnhanceTextInputSchema,
-    outputSchema: EnhanceTextOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
+  const enhanceTextFlow = ai.defineFlow(
+    {
+      name: 'enhanceTextFlow',
+      inputSchema: EnhanceTextInputSchema,
+      outputSchema: EnhanceTextOutputSchema,
+    },
+    async input => {
+      const {output} = await prompt(input);
+      return output!;
+    }
+  );
+
+  return {improveSummaryFlow, enhanceTextFlow};
+}
+
+let flows: ReturnType<typeof buildFlows> | undefined;
+
+function getFlows(): ReturnType<typeof buildFlows> {
+  if (!flows) {
+    flows = buildFlows();
   }
-);
+  return flows;
+}
+
+function toActionError(err: unknown, operation: string): Error {
+  const apiKey = getGoogleGenAIApiKey();
+  if (!apiKey) {
+    return new Error(
+      `Missing Gemini API key. Set GEMINI_API_KEY (or GOOGLE_GENAI_API_KEY) in .env.local and in your Vercel project environment variables to use AI ${operation}.`
+    );
+  }
+  // Log the full error server-side before surfacing a clean message.
+  console.error(`AI ${operation} failed:`, err);
+  const message =
+    err instanceof Error && err.message
+      ? err.message
+      : 'Unknown error from the AI provider.';
+  return new Error(`AI ${operation} failed: ${message}`);
+}
+
+export async function enhanceText(
+  input: EnhanceTextInput
+): Promise<EnhanceTextOutput> {
+  try {
+    const {enhanceTextFlow} = getFlows();
+    return await enhanceTextFlow(input);
+  } catch (err) {
+    throw toActionError(err, 'text enhancement');
+  }
+}
+
+export async function improveSummary(
+  input: ImproveSummaryInput
+): Promise<ImproveSummaryOutput> {
+  try {
+    const {improveSummaryFlow} = getFlows();
+    return await improveSummaryFlow(input);
+  } catch (err) {
+    throw toActionError(err, 'summary improvement');
+  }
+}
