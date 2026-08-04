@@ -128,10 +128,13 @@ function AiAssistant({
           jobDescription: jobDescriptionInput,
           excludedSuggestions: suggestionItems.map(item => item.text),
         });
-        if (!result?.suggestions?.length) {
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+        if (!result.data.suggestions.length) {
           throw new Error('AI returned no suggestions');
         }
-        appendFreshSuggestions(result.suggestions);
+        appendFreshSuggestions(result.data.suggestions);
       } else if (context === 'resume summary') {
         const result = await improveSummary({
           text: forField,
@@ -139,10 +142,13 @@ function AiAssistant({
           focusContext,
           jobDescription: jobDescriptionInput,
         });
-        if (!result?.suggestions?.length) {
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+        if (!result.data.suggestions.length) {
           throw new Error('AI returned no suggestions');
         }
-        replaceSuggestions(result.suggestions);
+        replaceSuggestions(result.data.suggestions);
       } else {
         const result = await enhanceText({
           text: forField,
@@ -150,10 +156,13 @@ function AiAssistant({
           focusContext,
           jobDescription: jobDescriptionInput,
         });
-        if (!result?.suggestions?.length) {
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+        if (!result.data.suggestions.length) {
           throw new Error('AI returned no suggestions');
         }
-        replaceSuggestions(result.suggestions);
+        replaceSuggestions(result.data.suggestions);
       }
     } catch (error) {
       handleError(error);
@@ -179,10 +188,13 @@ function AiAssistant({
         jobDescription: jobDescriptionInput,
         suggestions: suggestionItems.map(item => item.text),
       });
-      if (!result?.text) {
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      if (!result.data.text) {
         throw new Error('AI returned no combined text');
       }
-      setCombinedText(result.text);
+      setCombinedText(result.data.text);
     } catch (error) {
       handleError(error);
     } finally {

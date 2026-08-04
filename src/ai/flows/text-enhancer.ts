@@ -86,6 +86,13 @@ const CombineExperienceOutputSchema = z.object({
 });
 export type CombineExperienceOutput = z.infer<typeof CombineExperienceOutputSchema>;
 
+// Safe result envelope for server actions: on failure a plain object is
+// returned instead of throwing, so Next.js never turns the exception into a
+// Server Component render error.
+type ActionResult<T> =
+  | {success: true; data: T}
+  | {success: false; error: string};
+
 const MAX_JOB_DESCRIPTION_LENGTH = 12000;
 
 // If the user pasted a URL, fetch it server-side and extract readable text.
@@ -335,74 +342,63 @@ function logDetailedAiError(operation: string, error: unknown): void {
   console.error('Raw AI error:', error);
 }
 
+// Logs the failure and returns a plain, serializable error envelope instead of
+// letting the exception escape the server action boundary.
+function fail<T>(operation: string, error: unknown, errorCode: string): ActionResult<T> {
+  logDetailedAiError(operation, error);
+  const message =
+    error instanceof Error && error.message ? error.message : 'Unknown error';
+  return {success: false, error: `${errorCode}${message}`};
+}
+
 // NOTE on the model: 'gemini-2.5-flash' is the valid, registered model name
 // for @genkit-ai/google-genai@1.20.0 (see its KNOWN_GEMINI_MODELS). The older
 // 'gemini-1.5-flash' is NOT registered in this version and would throw
 // "invalid model". Verified against the installed plugin registry.
 export async function enhanceText(
   input: EnhanceTextInput
-): Promise<EnhanceTextOutput> {
-  assertGeminiApiKey();
+): Promise<ActionResult<EnhanceTextOutput>> {
   try {
+    assertGeminiApiKey();
     const {enhanceTextFlow} = getFlows();
-    return await enhanceTextFlow(input);
+    return {success: true, data: await enhanceTextFlow(input)};
   } catch (error) {
-    logDetailedAiError('text enhancement', error);
-    const message =
-      error instanceof Error && error.message
-        ? error.message
-        : 'Unknown error from the AI provider.';
-    throw new Error(`AI_TEXT_ENHANCEMENT_ERROR: ${message}`);
+    return fail<EnhanceTextOutput>('text enhancement', error, 'AI_TEXT_ENHANCEMENT_ERROR: ');
   }
 }
 
 export async function improveSummary(
   input: ImproveSummaryInput
-): Promise<ImproveSummaryOutput> {
-  assertGeminiApiKey();
+): Promise<ActionResult<ImproveSummaryOutput>> {
   try {
+    assertGeminiApiKey();
     const {improveSummaryFlow} = getFlows();
-    return await improveSummaryFlow(input);
+    return {success: true, data: await improveSummaryFlow(input)};
   } catch (error) {
-    logDetailedAiError('summary improvement', error);
-    const message =
-      error instanceof Error && error.message
-        ? error.message
-        : 'Unknown error from the AI provider.';
-    throw new Error(`AI_SUMMARY_IMPROVEMENT_ERROR: ${message}`);
+    return fail<ImproveSummaryOutput>('summary improvement', error, 'AI_SUMMARY_IMPROVEMENT_ERROR: ');
   }
 }
 
 export async function enhanceExperienceDescription(
   input: EnhanceExperienceInput
-): Promise<EnhanceExperienceOutput> {
-  assertGeminiApiKey();
+): Promise<ActionResult<EnhanceExperienceOutput>> {
   try {
+    assertGeminiApiKey();
     const {enhanceExperienceFlow} = getFlows();
-    return await enhanceExperienceFlow(input);
+    return {success: true, data: await enhanceExperienceFlow(input)};
   } catch (error) {
-    logDetailedAiError('experience description generation', error);
-    const message =
-      error instanceof Error && error.message
-        ? error.message
-        : 'Unknown error from the AI provider.';
-    throw new Error(`AI_EXPERIENCE_DESCRIPTION_ERROR: ${message}`);
+    return fail<EnhanceExperienceOutput>('experience description generation', error, 'AI_EXPERIENCE_DESCRIPTION_ERROR: ');
   }
 }
 
 export async function combineExperienceSuggestions(
   input: CombineExperienceInput
-): Promise<CombineExperienceOutput> {
-  assertGeminiApiKey();
+): Promise<ActionResult<CombineExperienceOutput>> {
   try {
+    assertGeminiApiKey();
     const {combineExperienceFlow} = getFlows();
-    return await combineExperienceFlow(input);
+    return {success: true, data: await combineExperienceFlow(input)};
   } catch (error) {
-    logDetailedAiError('experience suggestion combine', error);
-    const message =
-      error instanceof Error && error.message
-        ? error.message
-        : 'Unknown error from the AI provider.';
-    throw new Error(`AI_EXPERIENCE_COMBINE_ERROR: ${message}`);
+    return fail<CombineExperienceOutput>('experience suggestion combine', error, 'AI_EXPERIENCE_COMBINE_ERROR: ');
   }
 }
