@@ -29,59 +29,152 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { PlusCircle, Trash2, User, Briefcase, GraduationCap, Sparkles, Languages as LanguagesIcon, FileText, Upload, Wand2, Loader2, RefreshCw, Check } from 'lucide-react';
+import { PlusCircle, Trash2, User, Briefcase, GraduationCap, Sparkles, Languages as LanguagesIcon, FileText, Upload, Wand2, Loader2, RefreshCw, Check, X, Combine } from 'lucide-react';
 import type { ChangeEvent } from 'react';
 import type { Education, Experience, Language, Skill } from '@/lib/types';
 import Image from 'next/image';
-import { enhanceText, type EnhanceTextOutput, improveSummary, type ImproveSummaryOutput } from '@/ai/flows/text-enhancer';
+import { enhanceText, improveSummary, enhanceExperienceDescription, combineExperienceSuggestions } from '@/ai/flows/text-enhancer';
 import { toast } from '@/hooks/use-toast';
 
+const AI_ERROR_MESSAGE =
+  'AI suggestions are not available at this moment, try again later.';
 
-function AiAssistant({ forField, context, onSuggestionClick }: { forField: string, context: string, onSuggestionClick: (suggestion: string) => void }) {
+interface SuggestionItem {
+  id: string;
+  text: string;
+}
+
+interface JobContext {
+  jobTitle: string;
+  company: string;
+  city: string;
+}
+
+function AiAssistant({
+  forField,
+  context,
+  jobContext,
+  onSuggestionClick,
+}: {
+  forField: string;
+  context: string;
+  jobContext?: JobContext;
+  onSuggestionClick: (suggestion: string) => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<EnhanceTextOutput | ImproveSummaryOutput | null>(null);
+  const [suggestionItems, setSuggestionItems] = useState<SuggestionItem[]>([]);
+  const [combinedText, setCombinedText] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const isExperience = Boolean(jobContext);
+
+  const handleError = (error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    // Full technical details for developers only (browser console) — never
+    // shown to the user.
+    console.error('Detailed AI Error:', {
+      context,
+      jobContext,
+      fieldLength: forField.length,
+      fieldPreview: forField.slice(0, 200),
+      error,
+      message,
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    setError(AI_ERROR_MESSAGE);
+    toast({
+      title: 'AI suggestions unavailable',
+      description: AI_ERROR_MESSAGE,
+      variant: 'destructive',
+    });
+  };
+
+  const appendFreshSuggestions = (newTexts: string[]) => {
+    setSuggestionItems(prev => {
+      const existing = new Set(prev.map(item => item.text.trim().toLowerCase()));
+      const fresh = newTexts
+        .map(text => text.trim())
+        .filter(text => text && !existing.has(text.toLowerCase()));
+      return [...prev, ...fresh.map(text => ({ id: crypto.randomUUID(), text }))];
+    });
+    setCombinedText(null);
+  };
+
+  const replaceSuggestions = (newTexts: string[]) => {
+    setSuggestionItems(
+      newTexts
+        .map(text => text.trim())
+        .filter(Boolean)
+        .map(text => ({ id: crypto.randomUUID(), text }))
+    );
+    setCombinedText(null);
+  };
 
   const handleEnhance = async () => {
     setIsLoading(true);
     setError(null);
-    setSuggestions(null);
     try {
-      const result =
-        context === 'resume summary'
-          ? await improveSummary({ text: forField, role: '' })
-          : await enhanceText({ text: forField, context });
-
-      if (!result?.suggestions?.length) {
-        throw new Error('AI returned no suggestions');
+      if (isExperience && jobContext) {
+        const result = await enhanceExperienceDescription({
+          jobTitle: jobContext.jobTitle,
+          company: jobContext.company,
+          city: jobContext.city,
+          text: forField,
+          excludedSuggestions: suggestionItems.map(item => item.text),
+        });
+        if (!result?.suggestions?.length) {
+          throw new Error('AI returned no suggestions');
+        }
+        appendFreshSuggestions(result.suggestions);
+      } else if (context === 'resume summary') {
+        const result = await improveSummary({ text: forField, role: '' });
+        if (!result?.suggestions?.length) {
+          throw new Error('AI returned no suggestions');
+        }
+        replaceSuggestions(result.suggestions);
+      } else {
+        const result = await enhanceText({ text: forField, context });
+        if (!result?.suggestions?.length) {
+          throw new Error('AI returned no suggestions');
+        }
+        replaceSuggestions(result.suggestions);
       }
-
-      setSuggestions(result);
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : typeof error === 'string'
-          ? error
-          : 'Unknown error while generating suggestions.';
-      console.error('AI enhancement error:', message, error);
-      const isHiddenServerMessage =
-        error instanceof Error && /server components render/i.test(error.message);
-      setError('Failed to get suggestions. Please try again.');
-      toast({
-        title: 'AI suggestion failed',
-        description: isHiddenServerMessage
-          ? 'The server encountered an error. The full details were logged server-side — search Vercel function logs for "Detailed AI Error" (or "AI_TEXT_ENHANCEMENT_ERROR").'
-          : message,
-      });
+    } catch (error) {
+      handleError(error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const applySuggestion = (suggestion: string) => {
-    onSuggestionClick(suggestion);
+  const handleDelete = (id: string) => {
+    setSuggestionItems(prev => prev.filter(item => item.id !== id));
+    setCombinedText(null);
+  };
+
+  const handleCombine = async () => {
+    if (!jobContext || suggestionItems.length === 0) return;
+    setIsLoading(true);
+    setError(null);
+    try {
+      const result = await combineExperienceSuggestions({
+        jobTitle: jobContext.jobTitle,
+        company: jobContext.company,
+        suggestions: suggestionItems.map(item => item.text),
+      });
+      if (!result?.text) {
+        throw new Error('AI returned no combined text');
+      }
+      setCombinedText(result.text);
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const applySuggestion = (text: string) => {
+    onSuggestionClick(text);
     setIsOpen(false);
   };
 
@@ -99,31 +192,60 @@ function AiAssistant({ forField, context, onSuggestionClick }: { forField: strin
           <Wand2 className="h-4 w-4 text-primary/80" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80">
+      <PopoverContent className="w-80 max-h-[28rem] overflow-y-auto">
         <div className="grid gap-4">
           <div className="space-y-2">
             <h4 className="font-medium leading-none">AI Suggestions</h4>
             <p className="text-sm text-muted-foreground">
-              Suggestions to improve your {context}.
+              {isExperience
+                ? `Role-specific tasks for ${jobContext?.jobTitle || 'this position'}.`
+                : `Suggestions to improve your ${context}.`}
             </p>
           </div>
           <div className="grid gap-2">
             {isLoading && <div className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /><span>Generating ideas...</span></div>}
             {error && <p className="text-sm text-destructive">{error}</p>}
-            {suggestions?.suggestions.map((suggestion, index) => (
-              <div key={index} className="text-sm p-2 bg-muted/50 rounded-md">
-                <p
-                  className="cursor-pointer hover:text-accent-foreground"
-                  onClick={() => applySuggestion(suggestion)}
-                  title="Click to apply"
-                >
-                  {suggestion}
-                </p>
+            {combinedText && (
+              <div className="text-sm p-2 bg-primary/10 rounded-md">
+                <p className="whitespace-pre-line">{combinedText}</p>
                 <Button
                   variant="secondary"
                   size="sm"
                   className="mt-2 w-full"
-                  onClick={() => applySuggestion(suggestion)}
+                  onClick={() => applySuggestion(combinedText)}
+                  disabled={isLoading}
+                >
+                  <Check className="h-3.5 w-3.5" />
+                  Apply combined text
+                </Button>
+              </div>
+            )}
+            {suggestionItems.map(item => (
+              <div key={item.id} className="text-sm p-2 bg-muted/50 rounded-md">
+                <div className="flex items-start justify-between gap-2">
+                  <p
+                    className="cursor-pointer hover:text-accent-foreground"
+                    onClick={() => applySuggestion(item.text)}
+                    title="Click to apply"
+                  >
+                    {item.text}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 shrink-0 text-muted-foreground hover:text-destructive"
+                    onClick={() => handleDelete(item.id)}
+                    disabled={isLoading}
+                    title="Delete suggestion"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="mt-2 w-full"
+                  onClick={() => applySuggestion(item.text)}
                   disabled={isLoading}
                 >
                   <Check className="h-3.5 w-3.5" />
@@ -131,6 +253,22 @@ function AiAssistant({ forField, context, onSuggestionClick }: { forField: strin
                 </Button>
               </div>
             ))}
+            {isExperience && suggestionItems.length > 0 && (
+              <Button
+                variant="default"
+                size="sm"
+                className="w-full"
+                onClick={handleCombine}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Combine className="h-3.5 w-3.5" />
+                )}
+                Combine
+              </Button>
+            )}
             <Button
               variant="outline"
               size="sm"
@@ -143,7 +281,7 @@ function AiAssistant({ forField, context, onSuggestionClick }: { forField: strin
               ) : (
                 <RefreshCw className="h-3.5 w-3.5" />
               )}
-              New Suggestion
+              {isExperience ? 'New Complementary Suggestion' : 'New Suggestion'}
             </Button>
           </div>
         </div>
@@ -249,7 +387,12 @@ export function ResumeForm() {
                         <Label>{t('jobDescription')}</Label>
                         <Textarea value={exp.description} onChange={(e) => handleItemChange('experience', exp.id, 'description', e.target.value)} />
                         <div className="absolute top-0 right-0 rtl:left-0 rtl:right-auto">
-                            <AiAssistant forField={exp.description} context="job description" onSuggestionClick={(suggestion) => handleItemChange('experience', exp.id, 'description', suggestion)} />
+                            <AiAssistant
+                              forField={exp.description}
+                              context="job description"
+                              jobContext={{ jobTitle: exp.title, company: exp.company, city: exp.city }}
+                              onSuggestionClick={(suggestion) => handleItemChange('experience', exp.id, 'description', suggestion)}
+                            />
                         </div>
                     </div>
                   </CardContent>

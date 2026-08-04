@@ -43,6 +43,41 @@ const ImproveSummaryOutputSchema = z.object({
 });
 export type ImproveSummaryOutput = z.infer<typeof ImproveSummaryOutputSchema>;
 
+// --- Per-position experience description generation ---
+const EnhanceExperienceInputSchema = z.object({
+  jobTitle: z.string().optional().default('').describe('The job title of the position.'),
+  company: z.string().optional().default('').describe('The company or employer name.'),
+  city: z.string().optional().default('').describe('The city or location of the position.'),
+  text: z.string().optional().default('').describe('The current job description text (may be empty).'),
+  excludedSuggestions: z
+    .array(z.string())
+    .optional()
+    .default([])
+    .describe('Suggestions already shown to the user that the model must not repeat (complementary generation).'),
+});
+export type EnhanceExperienceInput = z.infer<typeof EnhanceExperienceInputSchema>;
+
+const EnhanceExperienceOutputSchema = z.object({
+  suggestions: z
+    .array(z.string())
+    .describe('A list of 4 role-specific, ready-to-paste task/responsibility descriptions for the given job position.'),
+});
+export type EnhanceExperienceOutput = z.infer<typeof EnhanceExperienceOutputSchema>;
+
+const CombineExperienceInputSchema = z.object({
+  jobTitle: z.string().optional().default('').describe('The job title of the position.'),
+  company: z.string().optional().default('').describe('The company or employer name.'),
+  suggestions: z
+    .array(z.string())
+    .describe('The user-selected suggestion bullets to synthesize into one cohesive job description block.'),
+});
+export type CombineExperienceInput = z.infer<typeof CombineExperienceInputSchema>;
+
+const CombineExperienceOutputSchema = z.object({
+  text: z.string().describe('A single cohesive, ATS-friendly job description block synthesized from the given suggestions.'),
+});
+export type CombineExperienceOutput = z.infer<typeof CombineExperienceOutputSchema>;
+
 function buildFlows() {
   const ai = getGenkitAI();
 
@@ -110,7 +145,90 @@ Return your suggestions in the required output format.`,
     }
   );
 
-  return {improveSummaryFlow, enhanceTextFlow};
+  const experiencePrompt = ai.definePrompt({
+    name: 'enhanceExperiencePrompt',
+    model: googleAI.model('gemini-2.5-flash'),
+    input: {schema: EnhanceExperienceInputSchema},
+    output: {schema: EnhanceExperienceOutputSchema},
+    prompt: `You are a senior resume writer and career coach who writes realistic, human-sounding job descriptions for applicants tracking systems (ATS).
+
+POSITION CONTEXT:
+- Job Title: {{{jobTitle}}}
+- Company: {{{company}}}
+- Location: {{{city}}}
+- Existing description: """{{{text}}}"""
+- Suggestions already shown to the user (DO NOT repeat these): {{{excludedSuggestions}}}
+
+TASK: Write exactly 4 distinct, ready-to-paste responsibility descriptions for THIS specific position. Each one must:
+- Open with a strong action verb (shipped, built, cut, led, launched, automated, owned, negotiated, redesigned, grew, restructured, resolved) and read like real work, not a template.
+- Be specific to the job title, company, and industry.
+- Include a concrete outcome, metric, or measurable impact where realistic.
+- Vary in sentence structure and length so the group sounds written by a human.
+
+HARD RULES (ZERO AI FINGERPRINT):
+- Never use these or similar corporate filler words: delve, delve into, seamlessly, testament, leveraging, leverage, utilize, synergy, synergize, cutting-edge, robust, streamline, dynamic, passionate, world-class, best-in-class, state-of-the-art, empower, facilitate, foster, foster innovation, comprehensive, ultimately, furthermore, moreover, in order to.
+- Never announce or explain the text ("Here are suggestions", "Consider adding", "This bullet shows").
+- Never use first-person "I" or "my". Do not start with "Responsible for", "Duties include", or "Tasked with".
+- No ATS-hostile content: plain text only, no images, icons, tables, or special formatting.
+
+Return exactly 4 items in the required output format.`,
+  });
+
+  const enhanceExperienceFlow = ai.defineFlow(
+    {
+      name: 'enhanceExperienceFlow',
+      inputSchema: EnhanceExperienceInputSchema,
+      outputSchema: EnhanceExperienceOutputSchema,
+    },
+    async input => {
+      const {output} = await experiencePrompt(input);
+      return output!;
+    }
+  );
+
+  const combinePrompt = ai.definePrompt({
+    name: 'combineExperiencePrompt',
+    model: googleAI.model('gemini-2.5-flash'),
+    input: {schema: CombineExperienceInputSchema},
+    output: {schema: CombineExperienceOutputSchema},
+    prompt: `You are a senior resume writer who turns raw bullet points into one cohesive, human-sounding job description that performs well in applicant tracking systems (ATS).
+
+POSITION: {{{jobTitle}}} at {{{company}}}
+USER-SELECTED BULLETS TO SYNTHESIZE:
+{{{suggestions}}}
+
+TASK: Synthesize the selected bullets into a single, cohesive job description block for the role. Follow this strict format:
+1. A 1-sentence role overview that summarizes the scope.
+2. 3-5 refined bullets, each opening with a strong action verb and keeping the specific outcomes from the source bullets.
+Merge overlapping ideas, remove repetition, and smooth the flow so the whole block reads as one human-written description.
+
+HARD RULES (ZERO AI FINGERPRINT):
+- Never use filler/corporate words: delve, seamlessly, testament, leveraging, utilize, synergy, cutting-edge, robust, streamline, dynamic, passionate, world-class, best-in-class, state-of-the-art, empower, facilitate, foster, foster growth, comprehensive, ultimately.
+- No self-reference ("Here is", "This description", "I combined").
+- First-person pronouns are allowed ONLY in the overview sentence ("I led...") — keep bullets verb-first without a subject where natural.
+- ATS-safe: plain text, standard phrases, no icons, tables, or decorative formatting.
+
+Return only the final joined text in the required output format.`,
+  });
+
+  const combineExperienceFlow = ai.defineFlow(
+    {
+      name: 'combineExperienceFlow',
+      inputSchema: CombineExperienceInputSchema,
+      outputSchema: CombineExperienceOutputSchema,
+    },
+    async input => {
+      const {output} = await combinePrompt(input);
+      return output!;
+    }
+  );
+
+  return {
+    improveSummaryFlow,
+    enhanceTextFlow,
+    enhanceExperienceFlow,
+    combineExperienceFlow,
+  };
 }
 
 let flows: ReturnType<typeof buildFlows> | undefined;
@@ -139,7 +257,7 @@ function logDetailedAiError(operation: string, error: unknown): void {
       if (value !== undefined) details[key] = value;
     }
   }
-  console.error('AI Generation Error details:', JSON.stringify(details, null, 2));
+  console.error('Detailed AI Error:', JSON.stringify(details, null, 2));
   console.error('Raw AI error:', error);
 }
 
@@ -178,5 +296,39 @@ export async function improveSummary(
         ? error.message
         : 'Unknown error from the AI provider.';
     throw new Error(`AI_SUMMARY_IMPROVEMENT_ERROR: ${message}`);
+  }
+}
+
+export async function enhanceExperienceDescription(
+  input: EnhanceExperienceInput
+): Promise<EnhanceExperienceOutput> {
+  assertGeminiApiKey();
+  try {
+    const {enhanceExperienceFlow} = getFlows();
+    return await enhanceExperienceFlow(input);
+  } catch (error) {
+    logDetailedAiError('experience description generation', error);
+    const message =
+      error instanceof Error && error.message
+        ? error.message
+        : 'Unknown error from the AI provider.';
+    throw new Error(`AI_EXPERIENCE_DESCRIPTION_ERROR: ${message}`);
+  }
+}
+
+export async function combineExperienceSuggestions(
+  input: CombineExperienceInput
+): Promise<CombineExperienceOutput> {
+  assertGeminiApiKey();
+  try {
+    const {combineExperienceFlow} = getFlows();
+    return await combineExperienceFlow(input);
+  } catch (error) {
+    logDetailedAiError('experience suggestion combine', error);
+    const message =
+      error instanceof Error && error.message
+        ? error.message
+        : 'Unknown error from the AI provider.';
+    throw new Error(`AI_EXPERIENCE_COMBINE_ERROR: ${message}`);
   }
 }
