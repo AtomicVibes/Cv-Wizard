@@ -77,7 +77,7 @@ export function ResumePreview() {
 
   return (
     <div className="sticky top-[88px] resume-preview-wrapper flex items-start justify-center">
-       <div className="p-4 bg-black/5 rounded-2xl">
+       <div className="resume-page-container p-4 bg-black/5 rounded-2xl">
           <div className="lg:scale-[0.8] xl:scale-[0.9] origin-top">
             {renderTemplate()}
           </div>
