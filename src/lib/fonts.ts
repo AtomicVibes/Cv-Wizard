@@ -1,6 +1,6 @@
 import type { FontOption } from './types';
 
-interface FontDetails {
+export interface FontDetails {
   value: FontOption;
   label: string;
   css: string;
