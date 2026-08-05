@@ -11,6 +11,11 @@ import { CanadianTemplate2 } from './templates/CanadianTemplate2';
 import { GolfTemplate2 } from './templates/GolfTemplate2';
 import { MiscTemplate } from './templates/MiscTemplate';
 import { MiscTemplate2 } from './templates/MiscTemplate2';
+import { ExecutiveTemplate } from './templates/ExecutiveTemplate';
+import { TechTemplate } from './templates/TechTemplate';
+import { CompactTemplate } from './templates/CompactTemplate';
+import { EditorialTemplate } from './templates/EditorialTemplate';
+import { CorporateTemplate } from './templates/CorporateTemplate';
 import { useEffect, useState } from 'react';
 
 export function ResumePreview() {
@@ -55,6 +60,16 @@ export function ResumePreview() {
         return <MiscTemplate {...props} />;
       case 'misc-2':
         return <MiscTemplate2 {...props} />;
+      case 'executive':
+        return <ExecutiveTemplate {...props} />;
+      case 'tech':
+        return <TechTemplate {...props} />;
+      case 'compact':
+        return <CompactTemplate {...props} />;
+      case 'editorial':
+        return <EditorialTemplate {...props} />;
+      case 'corporate':
+        return <CorporateTemplate {...props} />;
       default:
         return <ModernTemplate {...props} />;
     }

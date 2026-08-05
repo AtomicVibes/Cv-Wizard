@@ -51,7 +51,7 @@ export interface ResumeData {
 
 export type LanguageOption = 'en' | 'fr' | 'ar';
 
-export type TemplateOption = 'modern' | 'classic' | 'canadian' | 'golf' | 'modern-2' | 'classic-2' | 'canadian-2' | 'golf-2' | 'misc' | 'misc-2';
+export type TemplateOption = 'modern' | 'classic' | 'canadian' | 'golf' | 'modern-2' | 'classic-2' | 'canadian-2' | 'golf-2' | 'misc' | 'misc-2' | 'executive' | 'tech' | 'compact' | 'editorial' | 'corporate';
 
 export type FontOption =
   | 'lato'

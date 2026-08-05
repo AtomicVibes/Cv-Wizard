@@ -195,6 +195,14 @@ function TopBarControls({
               <SelectItem value="misc">{t('misc')}</SelectItem>
               <SelectItem value="misc-2">{t('misc-2')}</SelectItem>
             </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>ATS Modern</SelectLabel>
+              <SelectItem value="executive">{t('executive')}</SelectItem>
+              <SelectItem value="tech">{t('tech')}</SelectItem>
+              <SelectItem value="compact">{t('compact')}</SelectItem>
+              <SelectItem value="editorial">{t('editorial')}</SelectItem>
+              <SelectItem value="corporate">{t('corporate')}</SelectItem>
+            </SelectGroup>
           </SelectContent>
         </Select>
         <Select
@@ -322,6 +330,14 @@ function TopBarControls({
                   <SelectLabel>Misc</SelectLabel>
                   <SelectItem value="misc">{t('misc')}</SelectItem>
                   <SelectItem value="misc-2">{t('misc-2')}</SelectItem>
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel>ATS Modern</SelectLabel>
+                  <SelectItem value="executive">{t('executive')}</SelectItem>
+                  <SelectItem value="tech">{t('tech')}</SelectItem>
+                  <SelectItem value="compact">{t('compact')}</SelectItem>
+                  <SelectItem value="editorial">{t('editorial')}</SelectItem>
+                  <SelectItem value="corporate">{t('corporate')}</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
