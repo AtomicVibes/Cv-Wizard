@@ -25,6 +25,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -37,7 +42,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { PlusCircle, Trash2, User, Briefcase, GraduationCap, Sparkles, Languages as LanguagesIcon, FileText, Upload, Wand2, Loader2, RefreshCw, Check, X, Combine, ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { PlusCircle, Trash2, User, Briefcase, GraduationCap, Sparkles, Languages as LanguagesIcon, FileText, Upload, Wand2, Loader2, RefreshCw, Check, X, Combine, ChevronDown, SlidersHorizontal, Menu } from 'lucide-react';
 import type { ChangeEvent } from 'react';
 import type { Education, Experience, Language, Skill } from '@/lib/types';
 import Image from 'next/image';
@@ -79,6 +84,7 @@ function AiAssistant({
   const [combinedText, setCombinedText] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showTailor, setShowTailor] = useState(false);
+  const [tailorOpen, setTailorOpen] = useState(false);
   const [focusContext, setFocusContext] = useState('');
   const [jobDescriptionInput, setJobDescriptionInput] = useState('');
 
@@ -240,6 +246,31 @@ function AiAssistant({
     </Button>
   );
 
+  const tailorFields = (
+    <>
+      <div className="min-w-0 space-y-1.5">
+        <Label className="text-xs text-muted-foreground">Focus / Context (optional)</Label>
+        <Textarea
+          value={focusContext}
+          onChange={e => setFocusContext(e.target.value)}
+          placeholder="e.g. Emphasize leadership, highlight Python and cloud migration"
+          rows={3}
+          className="min-h-24 w-full px-3 py-2.5 text-sm sm:py-3 sm:text-base md:text-base"
+        />
+      </div>
+      <div className="min-w-0 space-y-1.5">
+        <Label className="text-xs text-muted-foreground">Job description URL or text (optional)</Label>
+        <Textarea
+          value={jobDescriptionInput}
+          onChange={e => setJobDescriptionInput(e.target.value)}
+          placeholder="Paste the job posting text or a URL to it"
+          rows={3}
+          className="min-h-24 w-full px-3 py-2.5 text-sm sm:py-3 sm:text-base md:text-base"
+        />
+      </div>
+    </>
+  );
+
   const content = (
     <>
       <div className="space-y-1.5 pr-12 sm:pr-0">
@@ -252,12 +283,12 @@ function AiAssistant({
             : `Suggestions to improve your ${context}.`}
         </DialogDescription>
       </div>
-      <div className="space-y-2">
+      <div className="hidden space-y-2 md:block">
         <Button
           variant="ghost"
           size="sm"
           type="button"
-          className="h-11 w-full justify-between px-3 text-muted-foreground md:h-9 md:px-2"
+          className="h-9 w-full justify-between px-2 text-muted-foreground"
           onClick={() => setShowTailor(prev => !prev)}
         >
           <span className="flex items-center gap-1.5">
@@ -270,28 +301,50 @@ function AiAssistant({
         </Button>
         {showTailor && (
           <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-2 sm:gap-4">
-            <div className="min-w-0 space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Focus / Context (optional)</Label>
-              <Textarea
-                value={focusContext}
-                onChange={e => setFocusContext(e.target.value)}
-                placeholder="e.g. Emphasize leadership, highlight Python and cloud migration"
-                rows={3}
-                className="min-h-24 w-full px-3 py-2.5 text-sm sm:py-3 sm:text-base md:text-base"
-              />
-            </div>
-            <div className="min-w-0 space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Job description URL or text (optional)</Label>
-              <Textarea
-                value={jobDescriptionInput}
-                onChange={e => setJobDescriptionInput(e.target.value)}
-                placeholder="Paste the job posting text or a URL to it"
-                rows={3}
-                className="min-h-24 w-full px-3 py-2.5 text-sm sm:py-3 sm:text-base md:text-base"
-              />
-            </div>
+            {tailorFields}
           </div>
         )}
+      </div>
+      <div className="md:hidden">
+        <Popover open={tailorOpen} onOpenChange={setTailorOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              type="button"
+              className="h-11 w-full justify-between px-3"
+              aria-label="Open options menu"
+              aria-haspopup="dialog"
+              aria-expanded={tailorOpen}
+            >
+              <span className="flex items-center gap-1.5">
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+                Options
+              </span>
+              <Menu className="h-4 w-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            align="start"
+            sideOffset={8}
+            className="w-[min(22rem,calc(100vw-2rem))] p-3"
+          >
+            <div className="grid gap-3">
+              <p className="text-sm font-medium">Tailor suggestions</p>
+              {tailorFields}
+              <Button
+                variant="outline"
+                size="sm"
+                type="button"
+                className="h-11 w-full md:h-9"
+                onClick={() => setTailorOpen(false)}
+              >
+                <Check className="h-3.5 w-3.5" />
+                Done
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
       <div className="min-h-0 max-h-[60vh] overflow-y-auto overscroll-contain pr-1">
         <div className="grid gap-2">
