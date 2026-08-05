@@ -6,10 +6,10 @@ import { LanguageProficiency } from './LanguageProficiency';
 export const ClassicTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10.5pt] leading-relaxed shadow-2xl rounded-lg">
-      <header className="text-center mb-8">
+    <div style={{ fontFamily }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[10.5pt] leading-normal shadow-2xl rounded-lg">
+      <header className="text-center mb-5">
         {personalInfo.showPhoto && personalInfo.photo && (
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-3">
               <Image
               src={personalInfo.photo}
               alt={personalInfo.name}
@@ -23,9 +23,9 @@ export const ClassicTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }: 
         <h2 className="text-xl font-light tracking-wider text-black mt-2">{personalInfo.jobTitle}</h2>
       </header>
 
-      <main className="space-y-8">
+      <main className="space-y-4">
           <section>
-              <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-4">Contact</h3>
+              <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-3">Contact</h3>
               <div className="flex justify-center items-center gap-x-6 gap-y-1 text-sm mt-4 text-gray-600 flex-wrap">
                 <p className="flex items-start gap-2"><Mail className="w-4 h-4 mt-0.5 shrink-0"/><span>{personalInfo.email}</span></p>
                 <p className="flex items-start gap-2"><Phone className="w-4 h-4 mt-0.5 shrink-0"/><span>{personalInfo.phone}</span></p>
@@ -41,8 +41,8 @@ export const ClassicTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }: 
           )}
 
           <section>
-            <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-4"><Briefcase className="w-4 h-4 inline-block ltr:mr-2 rtl:ml-2"/>{t('experience')}</h3>
-            <div className="space-y-6">
+            <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-3"><Briefcase className="w-4 h-4 inline-block ltr:mr-2 rtl:ml-2"/>{t('experience')}</h3>
+            <div className="space-y-4">
                 {experience.map(exp => (
                 <div key={exp.id}>
                     <div className="flex justify-between items-baseline">
@@ -59,8 +59,8 @@ export const ClassicTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }: 
           </section>
           
           <section>
-            <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-4"><GraduationCap className="w-4 h-4 inline-block ltr:mr-2 rtl:ml-2"/>{t('education')}</h3>
-            <div className="space-y-4">
+            <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-3"><GraduationCap className="w-4 h-4 inline-block ltr:mr-2 rtl:ml-2"/>{t('education')}</h3>
+            <div className="space-y-3">
                 {education.map(edu => (
                 <div key={edu.id}>
                     <div className="flex justify-between items-baseline">
@@ -74,8 +74,8 @@ export const ClassicTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }: 
           </section>
           
           <section>
-            <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-4"><Sparkles className="w-4 h-4 inline-block ltr:mr-2 rtl:ml-2"/>{t('skills')}</h3>
-            <ul className="text-sm space-y-1.5 list-disc ltr:pl-5 rtl:pr-5 columns-3">
+            <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-3"><Sparkles className="w-4 h-4 inline-block ltr:mr-2 rtl:ml-2"/>{t('skills')}</h3>
+            <ul className="text-sm space-y-1 list-disc ltr:pl-5 rtl:pr-5 columns-3">
             {skills.map(skill => skill.name && (
                 <li key={skill.id}>{skill.name}</li>
             ))}
@@ -83,8 +83,8 @@ export const ClassicTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }: 
           </section>
           
           <section>
-            <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-4"><LanguagesIcon className="w-4 h-4 inline-block ltr:mr-2 rtl:ml-2"/>{t('languages')}</h3>
-            <ul className="text-sm space-y-3">
+            <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-3"><LanguagesIcon className="w-4 h-4 inline-block ltr:mr-2 rtl:ml-2"/>{t('languages')}</h3>
+            <ul className="text-sm space-y-2">
             {languages.map(lang => (
                 <li key={lang.id}>
                     <span className="font-medium">{lang.name}</span>

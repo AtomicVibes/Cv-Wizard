@@ -6,8 +6,8 @@ import { LanguageProficiency } from './LanguageProficiency';
 export const MiscTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-gradient-to-br from-slate-50 to-blue-50 text-black p-8 w-full aspect-[210/297] text-[10.5pt] leading-relaxed shadow-2xl rounded-lg">
-      <header className="relative mb-8">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-gradient-to-br from-slate-50 to-blue-50 text-black p-8 w-full aspect-[210/297] text-[10.5pt] leading-normal shadow-2xl rounded-lg">
+      <header className="relative mb-5">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg -z-10 opacity-10"></div>
         <div className="flex items-center space-x-6 rtl:space-x-reverse p-4">
           {personalInfo.showPhoto && personalInfo.photo && (
@@ -33,22 +33,22 @@ export const MiscTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }: { d
         </div>
       </header>
 
-      <main className="space-y-6">
+      <main className="space-y-4">
         {summary && (
-          <section className="bg-white/60 backdrop-blur-sm rounded-lg p-4">
+          <section className="bg-white/60 backdrop-blur-sm rounded-lg p-3">
             <h3 className="text-base font-bold text-blue-700 mb-2 flex items-center gap-2"><FileText className="w-4 h-4"/>{t('summary')}</h3>
             <p className="text-sm text-black">{summary}</p>
           </section>
         )}
 
-        <section className="bg-white/60 backdrop-blur-sm rounded-lg p-4">
-          <h3 className="text-base font-bold text-blue-700 mb-4 flex items-center gap-2"><Briefcase className="w-4 h-4"/>{t('experience')}</h3>
+        <section className="bg-white/60 backdrop-blur-sm rounded-lg p-3">
+          <h3 className="text-base font-bold text-blue-700 mb-3 flex items-center gap-2"><Briefcase className="w-4 h-4"/>{t('experience')}</h3>
           <div className="space-y-4">
             {experience.map(exp => (
-              <div key={exp.id} className="border-l-4 border-blue-200 pl-4 bg-white/40 rounded-r-lg p-3">
+              <div key={exp.id} className="border-l-4 border-blue-200 pl-4 bg-white/40 rounded-r-lg p-2">
                 <div className="flex justify-between items-start mb-1">
                   <h4 className="text-sm font-bold text-black">{exp.title}</h4>
-                  <p className="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-1 rounded">{exp.startDate} - {exp.endDate}</p>
+                  <p className="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-0.5 rounded">{exp.startDate} - {exp.endDate}</p>
                 </div>
                 <p className="text-sm text-gray-600 mb-2 font-medium">{exp.company}, {exp.city}</p>
                 <ul className="text-sm text-black list-disc ltr:pl-4 rtl:pr-4 space-y-0.5">
@@ -59,14 +59,14 @@ export const MiscTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }: { d
           </div>
         </section>
 
-        <section className="bg-white/60 backdrop-blur-sm rounded-lg p-4">
-          <h3 className="text-base font-bold text-blue-700 mb-4 flex items-center gap-2"><GraduationCap className="w-4 h-4"/>{t('education')}</h3>
+        <section className="bg-white/60 backdrop-blur-sm rounded-lg p-3">
+          <h3 className="text-base font-bold text-blue-700 mb-3 flex items-center gap-2"><GraduationCap className="w-4 h-4"/>{t('education')}</h3>
           <div className="space-y-3">
             {education.map(edu => (
-              <div key={edu.id} className="border-l-4 border-purple-200 pl-4 bg-white/40 rounded-r-lg p-3">
+              <div key={edu.id} className="border-l-4 border-purple-200 pl-4 bg-white/40 rounded-r-lg p-2">
                 <div className="flex justify-between items-start mb-1">
                   <h4 className="text-sm font-bold text-black">{edu.degree}</h4>
-                  <p className="text-xs text-purple-600 font-medium bg-purple-50 px-2 py-1 rounded">{edu.startDate} - {edu.endDate}</p>
+                  <p className="text-xs text-purple-600 font-medium bg-purple-50 px-2 py-0.5 rounded">{edu.startDate} - {edu.endDate}</p>
                 </div>
                 <p className="text-sm text-gray-600 font-medium">{edu.institution}, {edu.city}</p>
               </div>
@@ -75,7 +75,7 @@ export const MiscTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }: { d
         </section>
 
         <div className="grid grid-cols-2 gap-4">
-          <section className="bg-white/60 backdrop-blur-sm rounded-lg p-4">
+          <section className="bg-white/60 backdrop-blur-sm rounded-lg p-3">
             <h3 className="text-base font-bold text-blue-700 mb-3 flex items-center gap-2"><Sparkles className="w-4 h-4"/>{t('skills')}</h3>
             <div className="flex flex-wrap gap-2">
               {skills.map(skill => skill.name && (
@@ -86,9 +86,9 @@ export const MiscTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }: { d
             </div>
           </section>
 
-          <section className="bg-white/60 backdrop-blur-sm rounded-lg p-4">
+          <section className="bg-white/60 backdrop-blur-sm rounded-lg p-3">
             <h3 className="text-base font-bold text-blue-700 mb-3 flex items-center gap-2"><LanguagesIcon className="w-4 h-4"/>{t('languages')}</h3>
-            <ul className="text-sm space-y-3">
+            <ul className="text-sm space-y-2">
               {languages.map(lang => (
                 <li key={lang.id}>
                   <span className="font-medium text-black">{lang.name}</span>

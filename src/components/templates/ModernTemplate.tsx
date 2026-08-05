@@ -7,10 +7,10 @@ import { LanguageProficiency } from './LanguageProficiency';
 export const ModernTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
       
       {/* Header */}
-      <header className="flex items-center space-x-8 rtl:space-x-reverse mb-8">
+      <header className="flex items-center space-x-8 rtl:space-x-reverse mb-5">
         {personalInfo.showPhoto && personalInfo.photo && (
           <div className="shrink-0">
             <Image
@@ -33,7 +33,7 @@ export const ModernTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { 
         </div>
       </header>
       
-      <div className="space-y-8">
+      <div className="space-y-4">
         {summary && (
           <section>
             <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b-2 pb-1.5 flex items-center gap-2" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor} / 0.1)` }}><FileText className="w-4 h-4"/>{t('summary')}</h3>
@@ -42,8 +42,8 @@ export const ModernTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { 
         )}
 
         <section>
-          <h3 className="text-sm font-bold uppercase tracking-wider mb-4 border-b-2 pb-1.5 flex items-center gap-2" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor} / 0.1)` }}><Briefcase className="w-4 h-4"/>{t('experience')}</h3>
-          <div className="space-y-5">
+          <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b-2 pb-1.5 flex items-center gap-2" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor} / 0.1)` }}><Briefcase className="w-4 h-4"/>{t('experience')}</h3>
+          <div className="space-y-4">
             {experience.map(exp => (
               <div key={exp.id}>
                 <div className="flex justify-between items-baseline">
@@ -60,8 +60,8 @@ export const ModernTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { 
         </section>
         
         <section>
-          <h3 className="text-sm font-bold uppercase tracking-wider mb-4 border-b-2 pb-1.5 flex items-center gap-2" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor} / 0.1)` }}><GraduationCap className="w-4 h-4"/>{t('education')}</h3>
-          <div className="space-y-4">
+          <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b-2 pb-1.5 flex items-center gap-2" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor} / 0.1)` }}><GraduationCap className="w-4 h-4"/>{t('education')}</h3>
+          <div className="space-y-3">
             {education.map(edu => (
               <div key={edu.id}>
                  <div className="flex justify-between items-baseline">
@@ -87,7 +87,7 @@ export const ModernTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { 
 
         <section>
             <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b-2 pb-1.5 flex items-center gap-2" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor} / 0.1)` }}><LanguagesIcon className="w-4 h-4"/>{t('languages')}</h3>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-2 text-sm">
               {languages.map(lang => (
                 <li key={lang.id}>
                   <p className="font-medium">{lang.name}</p>

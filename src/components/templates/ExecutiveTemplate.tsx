@@ -6,9 +6,9 @@ import { LanguageProficiency } from './LanguageProficiency';
 export const ExecutiveTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-12 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
       {/* Header — borderless, minimal */}
-      <header className="mb-8">
+      <header className="mb-5">
         <div className="flex items-center gap-8 rtl:gap-8">
           {personalInfo.showPhoto && personalInfo.photo && (
             <div className="shrink-0">
@@ -26,24 +26,24 @@ export const ExecutiveTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
             <h2 className="text-lg font-medium text-gray-500 mt-1">{personalInfo.jobTitle}</h2>
           </div>
         </div>
-        <div className="flex items-center gap-x-3 gap-y-0.5 text-xs text-gray-600 mt-4 flex-wrap">
+        <div className="flex items-center gap-x-3 gap-y-0.5 text-xs text-gray-600 mt-3 flex-wrap">
           {personalInfo.address && <p>{personalInfo.address}</p>}
           {personalInfo.phone && <p className="flex items-center"><span className="text-gray-300 mx-2" aria-hidden="true">·</span>{personalInfo.phone}</p>}
           {personalInfo.email && <p className="flex items-center"><span className="text-gray-300 mx-2" aria-hidden="true">·</span>{personalInfo.email}</p>}
         </div>
       </header>
 
-      <main className="space-y-7">
+      <main className="space-y-4">
         {summary && (
-          <section className="pb-6 border-b border-gray-100">
+          <section className="pb-4 border-b border-gray-100">
             <h3 className="text-xs font-bold uppercase tracking-widest text-black mb-2">{t('summary')}</h3>
             <p className="text-sm text-black">{summary}</p>
           </section>
         )}
 
-        <section className="pb-6 border-b border-gray-100">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-black mb-4">{t('experience')}</h3>
-          <div className="space-y-5">
+        <section className="pb-4 border-b border-gray-100">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-black mb-3">{t('experience')}</h3>
+          <div className="space-y-4">
             {experience.map(exp => (
               <div key={exp.id}>
                 <div className="grid grid-cols-[1fr_auto] items-baseline gap-x-4">
@@ -59,9 +59,9 @@ export const ExecutiveTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
           </div>
         </section>
 
-        <section className="pb-6 border-b border-gray-100">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-black mb-4">{t('education')}</h3>
-          <div className="space-y-4">
+        <section className="pb-4 border-b border-gray-100">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-black mb-3">{t('education')}</h3>
+          <div className="space-y-3">
             {education.map(edu => (
               <div key={edu.id}>
                 <div className="grid grid-cols-[1fr_auto] items-baseline gap-x-4">
@@ -76,7 +76,7 @@ export const ExecutiveTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
 
         <ResumePageBreak />
 
-        <section className="pb-6 border-b border-gray-100">
+        <section className="pb-4 border-b border-gray-100">
           <h3 className="text-xs font-bold uppercase tracking-widest text-black mb-3">{t('skills')}</h3>
           <ul className="columns-2 text-sm text-black list-disc ltr:pl-4 rtl:pr-4">
             {skills.map(skill => skill.name && (
@@ -87,7 +87,7 @@ export const ExecutiveTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
 
         <section>
           <h3 className="text-xs font-bold uppercase tracking-widest text-black mb-3">{t('languages')}</h3>
-          <ul className="text-sm text-black space-y-1.5">
+          <ul className="text-sm text-black space-y-1">
             {languages.map(lang => (
               <li key={lang.id}>
                 <span className="font-medium">{lang.name}</span>

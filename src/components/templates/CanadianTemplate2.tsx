@@ -7,7 +7,7 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
 
   const Section = ({ icon, title, children }: { icon: React.ReactNode, title: string, children: React.ReactNode }) => (
     <section>
-      <h3 className="text-lg font-bold text-black mb-4 flex items-center gap-3 border-b-2 border-gray-100 pb-2">
+      <h3 className="text-lg font-bold text-black mb-3 flex items-center gap-3 border-b-2 border-gray-100 pb-2">
         <span className="bg-gray-200 p-2 rounded-md">{icon}</span>
         {title}
       </h3>
@@ -16,13 +16,13 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
   );
 
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10pt] leading-relaxed shadow-2xl rounded-lg">
-      <header className="text-left mb-8">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
+      <header className="text-left mb-5">
         <h1 className="text-4xl font-extrabold tracking-tight text-black">{personalInfo.name}</h1>
         <h2 className="text-xl font-medium text-gray-600 mt-1">{personalInfo.jobTitle}</h2>
       </header>
       
-      <main className="space-y-6">
+      <main className="space-y-4">
         <Section icon={<User className="w-4 h-4" />} title={t('personalInfo')}>
           <div className="space-y-2 text-sm text-gray-600">
               {personalInfo.email && <p className="flex items-center gap-2"><Mail className="w-3.5 h-3.5"/>{personalInfo.email}</p>}
@@ -38,7 +38,7 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
         )}
 
         <Section icon={<Briefcase className="w-4 h-4" />} title={t('experience')}>
-          <div className="space-y-5">
+          <div className="space-y-4">
             {experience.map(exp => (
               <div key={exp.id}>
                 <div className="flex justify-between items-baseline">
@@ -55,7 +55,7 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
         </Section>
         
         <Section icon={<GraduationCap className="w-4 h-4" />} title={t('education')}>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {education.map(edu => (
               <div key={edu.id}>
                 <div className="flex justify-between items-baseline">
@@ -80,7 +80,7 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
         
         {languages.length > 0 && (
           <Section icon={<LanguagesIcon className="w-4 h-4" />} title={t('languages')}>
-            <ul className="text-sm space-y-3">
+            <ul className="text-sm space-y-2">
               {languages.map(lang => (
                 <li key={lang.id}>
                   <span className="font-medium text-black">{lang.name}</span>

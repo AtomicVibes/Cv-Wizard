@@ -6,8 +6,8 @@ export const CanadianTemplate = ({ data, t, fontFamily, themeColor, fontSize }: 
   const { personalInfo, summary, experience, education, skills, languages } = data;
 
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10pt] leading-relaxed shadow-2xl rounded-lg">
-      <header className="text-center mb-6">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
+      <header className="text-center mb-4">
         <h1 className="text-4xl font-extrabold tracking-tight text-black">{personalInfo.name}</h1>
         <h2 className="text-lg font-medium text-gray-600 mt-1">{personalInfo.jobTitle}</h2>
         <div className="flex justify-center items-center gap-x-5 gap-y-1 text-xs mt-3 text-gray-600 flex-wrap">
@@ -17,7 +17,7 @@ export const CanadianTemplate = ({ data, t, fontFamily, themeColor, fontSize }: 
         </div>
       </header>
 
-      <main className="space-y-6">
+      <main className="space-y-4">
         {summary && (
           <section>
             <h3 className="text-base font-bold uppercase tracking-wider text-black border-b-2 border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
@@ -29,11 +29,11 @@ export const CanadianTemplate = ({ data, t, fontFamily, themeColor, fontSize }: 
         )}
 
         <section>
-          <h3 className="text-base font-bold uppercase tracking-wider text-black border-b-2 border-gray-200 pb-1.5 mb-4 flex items-center gap-2">
+          <h3 className="text-base font-bold uppercase tracking-wider text-black border-b-2 border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
             <Briefcase className="w-4 h-4" />
             {t('experience')}
           </h3>
-          <div className="space-y-5">
+          <div className="space-y-4">
             {experience.map(exp => (
               <div key={exp.id}>
                 <div className="flex justify-between items-baseline">
@@ -50,11 +50,11 @@ export const CanadianTemplate = ({ data, t, fontFamily, themeColor, fontSize }: 
         </section>
         
         <section>
-          <h3 className="text-base font-bold uppercase tracking-wider text-black border-b-2 border-gray-200 pb-1.5 mb-4 flex items-center gap-2">
+          <h3 className="text-base font-bold uppercase tracking-wider text-black border-b-2 border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
             <GraduationCap className="w-4 h-4" />
             {t('education')}
           </h3>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {education.map(edu => (
               <div key={edu.id}>
                  <div className="flex justify-between items-baseline">
@@ -87,7 +87,7 @@ export const CanadianTemplate = ({ data, t, fontFamily, themeColor, fontSize }: 
               <LanguagesIcon className="w-4 h-4" />
               {t('languages')}
             </h3>
-            <ul className="text-sm space-y-3">
+            <ul className="text-sm space-y-2">
               {languages.map(lang => (
                 <li key={lang.id}>
                 <span className="font-medium text-black">{lang.name}</span>

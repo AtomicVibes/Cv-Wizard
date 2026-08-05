@@ -6,8 +6,8 @@ import { LanguageProficiency } from './LanguageProficiency';
 export const ModernTemplate2 = ({ data, t, fontFamily, themeColor }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10pt] leading-relaxed shadow-2xl rounded-lg">
-      <header className="flex flex-col items-center text-center mb-8 pb-6 border-b-2 border-primary/20">
+    <div style={{ fontFamily }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
+      <header className="flex flex-col items-center text-center mb-5 pb-4 border-b-2 border-primary/20">
         {personalInfo.showPhoto && personalInfo.photo && (
             <Image
                 src={personalInfo.photo}
@@ -19,14 +19,14 @@ export const ModernTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Res
         )}
         <h1 className="text-5xl font-bold text-primary">{personalInfo.name}</h1>
         <h2 className="text-xl font-semibold text-gray-600 mt-2">{personalInfo.jobTitle}</h2>
-         <div className="flex justify-center items-center gap-x-5 gap-y-1 text-xs mt-4 text-gray-600 flex-wrap">
+         <div className="flex justify-center items-center gap-x-5 gap-y-1 text-xs mt-3 text-gray-600 flex-wrap">
           {personalInfo.email && <p className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-primary"/>{personalInfo.email}</p>}
           {personalInfo.phone && <p className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-primary"/>{personalInfo.phone}</p>}
           {personalInfo.address && <p className="flex items-center gap-1.5"><MapPin className="w-3 h-3 text-primary"/>{personalInfo.address}</p>}
         </div>
       </header>
 
-      <main className="space-y-8">
+      <main className="space-y-4">
             {summary && (
             <section>
                 <h3 className="text-base font-bold uppercase tracking-widest text-primary mb-3 flex items-center gap-2"><FileText className="w-4 h-4"/>{t('summary')}</h3>
@@ -35,8 +35,8 @@ export const ModernTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Res
             )}
             
             <section>
-                <h3 className="text-base font-bold uppercase tracking-widest text-primary mb-4 flex items-center gap-2"><Briefcase className="w-4 h-4"/>{t('experience')}</h3>
-                <div className="space-y-5">
+                <h3 className="text-base font-bold uppercase tracking-widest text-primary mb-3 flex items-center gap-2"><Briefcase className="w-4 h-4"/>{t('experience')}</h3>
+                <div className="space-y-4">
                 {experience.map(exp => (
                     <div key={exp.id} className="relative ltr:pl-6 rtl:pr-6">
                         <div className="absolute top-1 ltr:left-0 rtl:right-0 h-full w-px bg-primary/20"></div>
@@ -55,8 +55,8 @@ export const ModernTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Res
             </section>
             
             <section>
-                <h3 className="text-base font-bold uppercase tracking-widest text-primary mb-4 flex items-center gap-2"><GraduationCap className="w-4 h-4"/>{t('education')}</h3>
-                <div className="space-y-4">
+                <h3 className="text-base font-bold uppercase tracking-widest text-primary mb-3 flex items-center gap-2"><GraduationCap className="w-4 h-4"/>{t('education')}</h3>
+                <div className="space-y-3">
                 {education.map(edu => (
                     <div key={edu.id}>
                     <h4 className="font-bold text-sm">{edu.degree}</h4>
@@ -79,7 +79,7 @@ export const ModernTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Res
             
             <section>
               <h3 className="text-base font-bold uppercase tracking-widest text-primary mb-3 flex items-center gap-2"><LanguagesIcon className="w-4 h-4"/>{t('languages')}</h3>
-              <ul className="space-y-3 text-sm">
+              <ul className="space-y-2 text-sm">
                 {languages.map(lang => (
                   <li key={lang.id}>
                     <p className="mb-1 font-medium">{lang.name}</p>

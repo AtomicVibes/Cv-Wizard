@@ -7,8 +7,8 @@ export const GolfTemplate = ({ data, t, fontFamily, themeColor }: { data: Resume
   const { personalInfo, summary, experience, education, skills, languages } = data;
 
   return (
-    <div style={{ fontFamily }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10pt] leading-relaxed shadow-2xl rounded-lg border-t-8 border-green-800">
-        <header className="flex items-center gap-8 mb-8">
+    <div style={{ fontFamily }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg border-t-8 border-green-800">
+        <header className="flex items-center gap-8 mb-5">
             {personalInfo.showPhoto && personalInfo.photo && (
                 <div className="shrink-0">
                     <Image
@@ -31,7 +31,7 @@ export const GolfTemplate = ({ data, t, fontFamily, themeColor }: { data: Resume
             </div>
         </header>
 
-      <main className="space-y-6">
+      <main className="space-y-4">
         {summary && (
           <section>
             <h3 className="text-sm font-bold uppercase tracking-wider text-green-800 border-b border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
@@ -43,11 +43,11 @@ export const GolfTemplate = ({ data, t, fontFamily, themeColor }: { data: Resume
         )}
 
         <section>
-          <h3 className="text-sm font-bold uppercase tracking-wider text-green-800 border-b border-gray-200 pb-1.5 mb-4 flex items-center gap-2">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-green-800 border-b border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
             <Briefcase className="w-4 h-4" />
             {t('experience')}
           </h3>
-          <div className="space-y-5">
+          <div className="space-y-4">
             {experience.map(exp => (
               <div key={exp.id}>
                 <div className="flex justify-between items-baseline">
@@ -65,11 +65,11 @@ export const GolfTemplate = ({ data, t, fontFamily, themeColor }: { data: Resume
         
         {education.length > 0 && (
           <section>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-green-800 border-b border-gray-200 pb-1.5 mb-4 flex items-center gap-2">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-green-800 border-b border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
               <GraduationCap className="w-4 h-4" />
               {t('education')}
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {education.map(edu => (
                 <div key={edu.id}>
                     <div className="flex justify-between items-baseline">
@@ -103,7 +103,7 @@ export const GolfTemplate = ({ data, t, fontFamily, themeColor }: { data: Resume
                 <Trophy className="w-4 h-4" />
                 Certifications & Achievements
               </h3>
-               <ul className="text-sm space-y-3">
+               <ul className="text-sm space-y-2">
                 {languages.map(lang => (
                   <li key={lang.id}>
                     <p className='mb-1 font-semibold'>{lang.name}</p>

@@ -6,10 +6,10 @@ import { LanguageProficiency } from './LanguageProficiency';
 export const ClassicTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10.5pt] leading-relaxed shadow-2xl rounded-lg">
-      <header className="text-center mb-8 pb-4" style={{ borderBottom: `4px solid hsl(${themeColor})` }}>
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[10.5pt] leading-normal shadow-2xl rounded-lg">
+      <header className="text-center mb-5 pb-3" style={{ borderBottom: `4px solid hsl(${themeColor})` }}>
         {personalInfo.showPhoto && personalInfo.photo && (
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-3">
             <Image
               src={personalInfo.photo}
               alt={personalInfo.name}
@@ -28,7 +28,7 @@ export const ClassicTemplate = ({ data, t, fontFamily, themeColor, fontSize }: {
         </div>
       </header>
 
-      <main className="space-y-8">
+      <main className="space-y-4">
         {summary && (
           <section>
             <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-3 flex items-center gap-2"><FileText className="w-4 h-4"/>{t('summary')}</h3>
@@ -37,8 +37,8 @@ export const ClassicTemplate = ({ data, t, fontFamily, themeColor, fontSize }: {
         )}
 
         <section>
-          <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-4 flex items-center gap-2"><Briefcase className="w-4 h-4"/>{t('experience')}</h3>
-          <div className="space-y-6">
+          <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-3 flex items-center gap-2"><Briefcase className="w-4 h-4"/>{t('experience')}</h3>
+          <div className="space-y-4">
             {experience.map(exp => (
               <div key={exp.id}>
                 <div className="flex justify-between items-baseline">
@@ -55,8 +55,8 @@ export const ClassicTemplate = ({ data, t, fontFamily, themeColor, fontSize }: {
         </section>
         
         <section>
-          <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-4 flex items-center gap-2"><GraduationCap className="w-4 h-4"/>{t('education')}</h3>
-          <div className="space-y-4">
+          <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-3 flex items-center gap-2"><GraduationCap className="w-4 h-4"/>{t('education')}</h3>
+          <div className="space-y-3">
             {education.map(edu => (
               <div key={edu.id}>
                  <div className="flex justify-between items-baseline">
@@ -80,7 +80,7 @@ export const ClassicTemplate = ({ data, t, fontFamily, themeColor, fontSize }: {
 
         <section>
           <h3 className="text-lg font-bold uppercase tracking-wider border-b-2 border-gray-300 pb-1 mb-3 flex items-center gap-2"><LanguagesIcon className="w-4 h-4"/>{t('languages')}</h3>
-          <ul className="text-sm space-y-3">
+          <ul className="text-sm space-y-2">
             {languages.map(lang => (
               <li key={lang.id}>
                 <span className="font-medium">{lang.name}</span>

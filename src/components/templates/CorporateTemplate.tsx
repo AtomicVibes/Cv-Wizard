@@ -6,13 +6,13 @@ import { LanguageProficiency } from './LanguageProficiency';
 export const CorporateTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
       {/* Header — traditional executive */}
-      <header className="mb-8">
+      <header className="mb-5">
         <div className="flex items-start justify-between gap-x-8">
           <div className="flex-grow">
             {personalInfo.showPhoto && personalInfo.photo && (
-              <div className="mb-4">
+              <div className="mb-3">
                 <Image
                   src={personalInfo.photo}
                   alt={personalInfo.name}
@@ -33,7 +33,7 @@ export const CorporateTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
         </div>
       </header>
 
-      <main className="space-y-7">
+      <main className="space-y-4">
         {summary && (
           <section>
             <h3 className="text-sm font-bold uppercase tracking-wider pb-1.5 mb-3 border-b-[2.5px]" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor})` }}>{t('summary')}</h3>
@@ -42,8 +42,8 @@ export const CorporateTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
         )}
 
         <section>
-          <h3 className="text-sm font-bold uppercase tracking-wider pb-1.5 mb-4 border-b-[2.5px]" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor})` }}>{t('experience')}</h3>
-          <div className="space-y-5">
+          <h3 className="text-sm font-bold uppercase tracking-wider pb-1.5 mb-3 border-b-[2.5px]" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor})` }}>{t('experience')}</h3>
+          <div className="space-y-4">
             {experience.map(exp => (
               <div key={exp.id}>
                 <div className="flex justify-between items-baseline gap-x-4">
@@ -60,8 +60,8 @@ export const CorporateTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
         </section>
 
         <section>
-          <h3 className="text-sm font-bold uppercase tracking-wider pb-1.5 mb-4 border-b-[2.5px]" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor})` }}>{t('education')}</h3>
-          <div className="space-y-4">
+          <h3 className="text-sm font-bold uppercase tracking-wider pb-1.5 mb-3 border-b-[2.5px]" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor})` }}>{t('education')}</h3>
+          <div className="space-y-3">
             {education.map(edu => (
               <div key={edu.id}>
                 <div className="flex justify-between items-baseline gap-x-4">
@@ -87,7 +87,7 @@ export const CorporateTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
 
         <section>
           <h3 className="text-sm font-bold uppercase tracking-wider pb-1.5 mb-3 border-b-[2.5px]" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor})` }}>{t('languages')}</h3>
-          <ul className="text-sm text-black space-y-1.5">
+          <ul className="text-sm text-black space-y-1">
             {languages.map(lang => (
               <li key={lang.id}>
                 <span className="font-semibold">{lang.name}</span>

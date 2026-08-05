@@ -6,11 +6,11 @@ import { LanguageProficiency } from './LanguageProficiency';
 export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
       {/* Header — clean single column */}
-      <header className="mb-8">
+      <header className="mb-5">
         {personalInfo.showPhoto && personalInfo.photo && (
-          <div className="mb-4">
+          <div className="mb-3">
             <Image
               src={personalInfo.photo}
               alt={personalInfo.name}
@@ -29,7 +29,7 @@ export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
         </div>
       </header>
 
-      <main className="space-y-7">
+      <main className="space-y-4">
         {summary && (
           <section>
             <h3 className="font-mono text-xs font-bold uppercase tracking-widest mb-2" style={{ color: `hsl(${themeColor})` }}>{'//'} {t('summary')}</h3>
@@ -38,8 +38,8 @@ export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
         )}
 
         <section>
-          <h3 className="font-mono text-xs font-bold uppercase tracking-widest mb-4" style={{ color: `hsl(${themeColor})` }}>{'//'} {t('experience')}</h3>
-          <div className="space-y-5">
+          <h3 className="font-mono text-xs font-bold uppercase tracking-widest mb-3" style={{ color: `hsl(${themeColor})` }}>{'//'} {t('experience')}</h3>
+          <div className="space-y-4">
             {experience.map(exp => (
               <div key={exp.id}>
                 <div className="flex justify-between items-baseline gap-x-4">
@@ -56,7 +56,7 @@ export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
         </section>
 
         <section>
-          <h3 className="font-mono text-xs font-bold uppercase tracking-widest mb-4" style={{ color: `hsl(${themeColor})` }}>{'//'} {t('education')}</h3>
+          <h3 className="font-mono text-xs font-bold uppercase tracking-widest mb-3" style={{ color: `hsl(${themeColor})` }}>{'//'} {t('education')}</h3>
           <div className="space-y-3">
             {education.map(edu => (
               <div key={edu.id}>

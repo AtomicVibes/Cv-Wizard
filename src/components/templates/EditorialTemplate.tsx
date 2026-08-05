@@ -8,9 +8,9 @@ const serif = "'Playfair Display', Georgia, 'Times New Roman', serif";
 export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-12 w-full aspect-[210/297] text-[10.5pt] leading-relaxed shadow-2xl rounded-lg">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[10.5pt] leading-normal shadow-2xl rounded-lg">
       {/* Header — editorial serif masthead */}
-      <header className="mb-8 pb-6 border-b-2 border-black">
+      <header className="mb-5 pb-4 border-b-2 border-black">
         {personalInfo.showPhoto && personalInfo.photo && (
           <div className="mb-5">
             <Image
@@ -24,14 +24,14 @@ export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
         )}
         <h1 className="text-[26pt] font-semibold tracking-tight leading-tight" style={{ fontFamily: serif }}>{personalInfo.name}</h1>
         <h2 className="text-sm mt-1.5 italic" style={{ fontFamily: serif }}>{personalInfo.jobTitle}</h2>
-        <div className="flex items-center gap-x-3 gap-y-0.5 text-xs text-gray-600 mt-4 flex-wrap">
+        <div className="flex items-center gap-x-3 gap-y-0.5 text-xs text-gray-600 mt-3 flex-wrap">
           {personalInfo.address && <p>{personalInfo.address}</p>}
           {personalInfo.phone && <p className="flex items-center"><span className="text-gray-300 mx-2" aria-hidden="true">—</span>{personalInfo.phone}</p>}
           {personalInfo.email && <p className="flex items-center"><span className="text-gray-300 mx-2" aria-hidden="true">—</span>{personalInfo.email}</p>}
         </div>
       </header>
 
-      <main className="space-y-7">
+      <main className="space-y-4">
         {summary && (
           <section>
             <h3 className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] font-semibold mb-3" style={{ fontFamily: serif }}>
@@ -43,11 +43,11 @@ export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
         )}
 
         <section>
-          <h3 className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] font-semibold mb-4" style={{ fontFamily: serif }}>
+          <h3 className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] font-semibold mb-3" style={{ fontFamily: serif }}>
             {t('experience')}
             <span className="flex-1 border-t border-gray-300" aria-hidden="true" />
           </h3>
-          <div className="space-y-5">
+          <div className="space-y-4">
             {experience.map(exp => (
               <div key={exp.id}>
                 <div className="flex justify-between items-baseline gap-x-4">
@@ -64,11 +64,11 @@ export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
         </section>
 
         <section>
-          <h3 className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] font-semibold mb-4" style={{ fontFamily: serif }}>
+          <h3 className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] font-semibold mb-3" style={{ fontFamily: serif }}>
             {t('education')}
             <span className="flex-1 border-t border-gray-300" aria-hidden="true" />
           </h3>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {education.map(edu => (
               <div key={edu.id}>
                 <div className="flex justify-between items-baseline gap-x-4">
@@ -103,7 +103,7 @@ export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
             {t('languages')}
             <span className="flex-1 border-t border-gray-300" aria-hidden="true" />
           </h3>
-          <ul className="text-sm text-black space-y-1.5">
+          <ul className="text-sm text-black space-y-1">
             {languages.map(lang => (
               <li key={lang.id}>
                 <span className="font-medium" style={{ fontFamily: serif }}>{lang.name}</span>

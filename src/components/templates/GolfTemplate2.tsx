@@ -26,9 +26,9 @@ export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Resum
   return (
     <div style={{ fontFamily }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
 
-        <header className="text-center mb-6">
+        <header className="text-center mb-4">
             {personalInfo.showPhoto && personalInfo.photo && (
-                <div className="flex justify-center mb-4">
+                <div className="flex justify-center mb-3">
                     <Image
                         src={personalInfo.photo}
                         alt={personalInfo.name}
@@ -47,7 +47,7 @@ export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Resum
             </div>
         </header>
 
-        <main className="flex flex-col gap-6">
+        <main className="flex flex-col gap-4">
             {summary && (
               <section>
                 <p className="text-sm text-black italic border-l-4 border-blue-200/80 pl-4 py-2 bg-blue-50/50 rounded-r-md">{summary}</p>
@@ -55,7 +55,7 @@ export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Resum
             )}
 
             <Section icon={<Briefcase className="w-4 h-4" />} title={t('experience')}>
-                <div className="space-y-5">
+                <div className="space-y-4">
                     {experience.map(exp => (
                     <div key={exp.id}>
                         <div className="flex justify-between items-baseline">
@@ -72,7 +72,7 @@ export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Resum
             </Section>
 
             <Section icon={<GraduationCap className="w-4 h-4" />} title={t('education')}>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {education.map(edu => (
                   <div key={edu.id}>
                      <div className="flex justify-between items-baseline">
@@ -86,7 +86,7 @@ export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Resum
             </Section>
 
              <Section icon={<Sparkles className="w-4 h-4"/>} title="Core Competencies">
-                <ul className="text-sm space-y-1.5 columns-3">
+                <ul className="text-sm space-y-1 columns-3">
                     {skills.map(skill => skill.name && (
                         <li key={skill.id} className="flex items-center gap-2"><GolfBallIcon/>{skill.name}</li>
                     ))}
@@ -94,7 +94,7 @@ export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Resum
             </Section>
 
             <Section icon={<Trophy className="w-4 h-4"/>} title="Certifications">
-                 <ul className="text-sm space-y-3">
+                 <ul className="text-sm space-y-2">
                     {languages.map(lang => (
                         <li key={lang.id}>
                            <div>
