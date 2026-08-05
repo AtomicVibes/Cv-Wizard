@@ -25,10 +25,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import {
   Sheet,
   SheetContent,
@@ -80,7 +82,7 @@ function AiAssistant({
   const [focusContext, setFocusContext] = useState('');
   const [jobDescriptionInput, setJobDescriptionInput] = useState('');
 
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobile(640);
   const isExperience = Boolean(jobContext);
 
   const handleError = (error: unknown) => {
@@ -239,14 +241,16 @@ function AiAssistant({
   );
 
   const content = (
-    <div className="grid gap-4">
-      <div className="space-y-1.5 pr-12 md:pr-0">
-        <h4 className="font-medium leading-none">AI Suggestions</h4>
-        <p className="break-words text-sm text-muted-foreground">
+    <>
+      <div className="space-y-1.5 pr-12 sm:pr-0">
+        <DialogTitle className="text-base font-medium leading-none sm:text-lg">
+          AI Suggestions
+        </DialogTitle>
+        <DialogDescription className="break-words">
           {isExperience
             ? `Role-specific tasks for ${jobContext?.jobTitle || 'this position'}.`
             : `Suggestions to improve your ${context}.`}
-        </p>
+        </DialogDescription>
       </div>
       <div className="space-y-2">
         <Button
@@ -265,7 +269,7 @@ function AiAssistant({
           />
         </Button>
         {showTailor && (
-          <div className="grid grid-cols-1 gap-3 rounded-md border p-3 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-2 sm:gap-4">
             <div className="min-w-0 space-y-1.5">
               <Label className="text-xs text-muted-foreground">Focus / Context (optional)</Label>
               <Textarea
@@ -273,7 +277,7 @@ function AiAssistant({
                 onChange={e => setFocusContext(e.target.value)}
                 placeholder="e.g. Emphasize leadership, highlight Python and cloud migration"
                 rows={3}
-                className="min-h-20 text-xs"
+                className="min-h-24 w-full px-3 py-2.5 text-sm sm:py-3 sm:text-base md:text-base"
               />
             </div>
             <div className="min-w-0 space-y-1.5">
@@ -283,108 +287,110 @@ function AiAssistant({
                 onChange={e => setJobDescriptionInput(e.target.value)}
                 placeholder="Paste the job posting text or a URL to it"
                 rows={3}
-                className="min-h-20 text-xs break-words"
+                className="min-h-24 w-full px-3 py-2.5 text-sm sm:py-3 sm:text-base md:text-base"
               />
             </div>
           </div>
         )}
       </div>
-      <div className="grid gap-2">
-        {isLoading && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span>Generating ideas...</span>
-          </div>
-        )}
-        {error && <p className="break-words text-sm text-destructive">{error}</p>}
-        {combinedText && (
-          <div className="rounded-md bg-primary/10 p-3">
-            <p className="whitespace-pre-line break-words text-sm leading-relaxed">{combinedText}</p>
-            <Button
-              variant="secondary"
-              size="sm"
-              type="button"
-              className="mt-2 h-11 w-full md:h-9"
-              onClick={() => applySuggestion(combinedText)}
-              disabled={isLoading}
-            >
-              <Check className="h-3.5 w-3.5" />
-              Apply combined text
-            </Button>
-          </div>
-        )}
-        {suggestionItems.map(item => (
-          <div key={item.id} className="rounded-md bg-muted/50 p-3">
-            <div className="flex items-start gap-2">
-              <p
-                className="min-w-0 flex-1 cursor-pointer break-words text-sm leading-relaxed hover:text-accent-foreground"
-                onClick={() => applySuggestion(item.text)}
-                title="Click to apply"
-              >
-                {item.text}
-              </p>
+      <div className="min-h-0 max-h-[60vh] overflow-y-auto overscroll-contain pr-1">
+        <div className="grid gap-2">
+          {isLoading && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>Generating ideas...</span>
+            </div>
+          )}
+          {error && <p className="break-words text-sm text-destructive">{error}</p>}
+          {combinedText && (
+            <div className="rounded-md bg-primary/10 p-3">
+              <p className="whitespace-pre-line break-words text-sm leading-relaxed">{combinedText}</p>
               <Button
-                variant="ghost"
-                size="icon"
+                variant="secondary"
+                size="sm"
                 type="button"
-                className="h-11 w-11 shrink-0 rounded-full text-muted-foreground hover:text-destructive md:h-8 md:w-8"
-                onClick={() => handleDelete(item.id)}
+                className="mt-2 h-11 w-full md:h-9"
+                onClick={() => applySuggestion(combinedText)}
                 disabled={isLoading}
-                title="Delete suggestion"
-                aria-label="Delete suggestion"
               >
-                <X className="h-4 w-4" />
+                <Check className="h-3.5 w-3.5" />
+                Apply combined text
               </Button>
             </div>
-            <Button
-              variant="secondary"
-              size="sm"
-              type="button"
-              className="mt-2 h-11 w-full md:h-9"
-              onClick={() => applySuggestion(item.text)}
-              disabled={isLoading}
-            >
-              <Check className="h-3.5 w-3.5" />
-              Apply
-            </Button>
-          </div>
-        ))}
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-          {isExperience && suggestionItems.length > 0 && (
-            <Button
-              variant="default"
-              size="sm"
-              type="button"
-              className="h-11 w-full md:h-9"
-              onClick={handleCombine}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <Combine className="h-3.5 w-3.5" />
-              )}
-              Combine
-            </Button>
           )}
+          {suggestionItems.map(item => (
+            <div key={item.id} className="rounded-md bg-muted/50 p-3">
+              <div className="flex flex-wrap items-start gap-2">
+                <p
+                  className="min-w-0 flex-1 cursor-pointer break-words text-sm leading-relaxed hover:text-accent-foreground"
+                  onClick={() => applySuggestion(item.text)}
+                  title="Click to apply"
+                >
+                  {item.text}
+                </p>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  type="button"
+                  className="h-11 w-11 shrink-0 rounded-full text-muted-foreground hover:text-destructive md:h-8 md:w-8"
+                  onClick={() => handleDelete(item.id)}
+                  disabled={isLoading}
+                  title="Delete suggestion"
+                  aria-label="Delete suggestion"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                type="button"
+                className="mt-2 h-11 w-full md:h-9"
+                onClick={() => applySuggestion(item.text)}
+                disabled={isLoading}
+              >
+                <Check className="h-3.5 w-3.5" />
+                Apply
+              </Button>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-2 sm:gap-4">
+        {isExperience && suggestionItems.length > 0 && (
           <Button
-            variant="outline"
+            variant="default"
             size="sm"
             type="button"
-            className="h-11 w-full md:h-9"
-            onClick={handleEnhance}
+            className="h-11 min-w-0 flex-1 basis-full whitespace-normal py-2.5 sm:h-auto sm:min-h-10 sm:basis-auto sm:py-2"
+            onClick={handleCombine}
             disabled={isLoading}
           >
             {isLoading ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
             ) : (
-              <RefreshCw className="h-3.5 w-3.5" />
+              <Combine className="h-3.5 w-3.5" />
             )}
-            {isExperience ? 'New Complementary Suggestion' : 'New Suggestion'}
+            Combine
           </Button>
-        </div>
+        )}
+        <Button
+          variant="outline"
+          size="sm"
+          type="button"
+          className="h-11 min-w-0 flex-1 basis-full whitespace-normal py-2.5 sm:h-auto sm:min-h-10 sm:basis-auto sm:py-2"
+          onClick={handleEnhance}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            <RefreshCw className="h-3.5 w-3.5" />
+          )}
+          {isExperience ? 'New Complementary Suggestion' : 'New Suggestion'}
+        </Button>
       </div>
-    </div>
+    </>
   );
 
   return isMobile ? (
@@ -392,21 +398,18 @@ function AiAssistant({
       <SheetTrigger asChild>{triggerButton}</SheetTrigger>
       <SheetContent
         side="bottom"
-        className="w-full max-h-[85dvh] overflow-y-auto rounded-t-xl p-4 pt-6 pb-[max(1rem,env(safe-area-inset-bottom))] sm:p-6 sm:pt-6"
+        className="flex max-h-[85dvh] flex-col overflow-hidden rounded-t-xl p-4 pt-6 pb-[max(1rem,env(safe-area-inset-bottom))]"
       >
         {content}
       </SheetContent>
     </Sheet>
   ) : (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
-      <PopoverContent
-        align="end"
-        className="w-[28rem] max-w-[calc(100vw-2rem)] max-h-[min(80vh,35rem)] overflow-y-auto p-5"
-      >
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>{triggerButton}</DialogTrigger>
+      <DialogContent className="flex max-h-[85dvh] flex-col overflow-hidden rounded-xl p-4 pt-12 sm:max-w-lg sm:p-6 md:max-w-2xl">
         {content}
-      </PopoverContent>
-    </Popover>
+      </DialogContent>
+    </Dialog>
   );
 }
 
