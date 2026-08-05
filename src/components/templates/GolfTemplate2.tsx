@@ -24,7 +24,7 @@ export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Resum
   const { personalInfo, summary, experience, education, skills, languages } = data;
 
   return (
-    <div style={{ fontFamily }} className="bg-white text-gray-800 p-8 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
+    <div style={{ fontFamily }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
 
         <header className="text-center mb-6">
             {personalInfo.showPhoto && personalInfo.photo && (
@@ -39,7 +39,7 @@ export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Resum
                 </div>
             )}
             <h1 className="text-4xl font-bold tracking-tight text-blue-900">{personalInfo.name}</h1>
-            <h2 className="text-lg font-semibold text-gray-700 mt-1">{personalInfo.jobTitle}</h2>
+            <h2 className="text-lg font-semibold text-black mt-1">{personalInfo.jobTitle}</h2>
             <div className="flex justify-center items-center gap-x-4 gap-y-1 text-xs mt-3 text-gray-600 flex-wrap">
               {personalInfo.email && <p className="flex items-start gap-2"><Mail className="w-3.5 h-3.5 mt-0.5 shrink-0 text-blue-800/80"/><span>{personalInfo.email}</span></p>}
               {personalInfo.phone && <p className="flex items-start gap-2"><Phone className="w-3.5 h-3.5 mt-0.5 shrink-0 text-blue-800/80"/><span>{personalInfo.phone}</span></p>}
@@ -50,7 +50,7 @@ export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Resum
         <main className="flex flex-col gap-6">
             {summary && (
               <section>
-                <p className="text-sm text-gray-700 italic border-l-4 border-blue-200/80 pl-4 py-2 bg-blue-50/50 rounded-r-md">{summary}</p>
+                <p className="text-sm text-black italic border-l-4 border-blue-200/80 pl-4 py-2 bg-blue-50/50 rounded-r-md">{summary}</p>
               </section>
             )}
 

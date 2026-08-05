@@ -7,7 +7,7 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
 
   const Section = ({ icon, title, children }: { icon: React.ReactNode, title: string, children: React.ReactNode }) => (
     <section>
-      <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-3 border-b-2 border-gray-100 pb-2">
+      <h3 className="text-lg font-bold text-black mb-4 flex items-center gap-3 border-b-2 border-gray-100 pb-2">
         <span className="bg-gray-200 p-2 rounded-md">{icon}</span>
         {title}
       </h3>
@@ -16,9 +16,9 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
   );
 
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-gray-800 p-10 w-full aspect-[210/297] text-[10pt] leading-relaxed shadow-2xl rounded-lg">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10pt] leading-relaxed shadow-2xl rounded-lg">
       <header className="text-left mb-8">
-        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">{personalInfo.name}</h1>
+        <h1 className="text-4xl font-extrabold tracking-tight text-black">{personalInfo.name}</h1>
         <h2 className="text-xl font-medium text-gray-600 mt-1">{personalInfo.jobTitle}</h2>
       </header>
       
@@ -45,7 +45,7 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
                   <h4 className="font-bold text-base">{exp.title}</h4>
                   <p className="text-[9pt] text-gray-500 font-medium">{exp.startDate && `${exp.startDate} -`} {exp.endDate}</p>
                 </div>
-                <p className="text-sm text-gray-700 font-semibold">{exp.company}{exp.city && `, ${exp.city}`}</p>
+                <p className="text-sm text-black font-semibold">{exp.company}{exp.city && `, ${exp.city}`}</p>
                 <ul className="mt-1.5 text-sm text-gray-600 list-disc ltr:pl-5 rtl:pr-5 space-y-1">
                   {exp.description.split('\n').map((line, i) => line.trim() && <li key={i}>{line.replace(/^- /, '')}</li>)}
                 </ul>
@@ -62,7 +62,7 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
                   <h4 className="font-bold text-base">{edu.degree}</h4>
                   <p className="text-[9pt] text-gray-500 font-medium">{edu.startDate && `${edu.startDate} -`} {edu.endDate}</p>
                   </div>
-                <p className="text-sm text-gray-700 font-semibold">{edu.institution}{edu.city && `, ${edu.city}`}</p>
+                <p className="text-sm text-black font-semibold">{edu.institution}{edu.city && `, ${edu.city}`}</p>
               </div>
             ))}
           </div>
@@ -83,7 +83,7 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
             <ul className="text-sm space-y-3">
               {languages.map(lang => (
                 <li key={lang.id}>
-                  <span className="font-medium text-gray-800">{lang.name}</span>
+                  <span className="font-medium text-black">{lang.name}</span>
                   <LanguageProficiency proficiency={lang.proficiency} themeColor={themeColor} className="mt-1" />
                 </li>
               ))}

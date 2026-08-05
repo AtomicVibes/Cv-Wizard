@@ -7,7 +7,7 @@ export const GolfTemplate = ({ data, t, fontFamily, themeColor }: { data: Resume
   const { personalInfo, summary, experience, education, skills, languages } = data;
 
   return (
-    <div style={{ fontFamily }} className="bg-white text-gray-800 p-10 w-full aspect-[210/297] text-[10pt] leading-relaxed shadow-2xl rounded-lg border-t-8 border-green-800">
+    <div style={{ fontFamily }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10pt] leading-relaxed shadow-2xl rounded-lg border-t-8 border-green-800">
         <header className="flex items-center gap-8 mb-8">
             {personalInfo.showPhoto && personalInfo.photo && (
                 <div className="shrink-0">
@@ -38,7 +38,7 @@ export const GolfTemplate = ({ data, t, fontFamily, themeColor }: { data: Resume
               <UserCheck className="w-4 h-4" />
               {t('summary')}
             </h3>
-            <p className="text-sm text-gray-700">{summary}</p>
+            <p className="text-sm text-black">{summary}</p>
           </section>
         )}
 

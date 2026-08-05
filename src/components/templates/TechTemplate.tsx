@@ -6,7 +6,7 @@ import { LanguageProficiency } from './LanguageProficiency';
 export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-gray-800 p-10 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
       {/* Header — clean single column */}
       <header className="mb-8">
         {personalInfo.showPhoto && personalInfo.photo && (
@@ -20,7 +20,7 @@ export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
             />
           </div>
         )}
-        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">{personalInfo.name}</h1>
+        <h1 className="text-4xl font-extrabold tracking-tight text-black">{personalInfo.name}</h1>
         <h2 className="text-lg font-medium text-gray-600 mt-1" style={{ color: `hsl(${themeColor})` }}>{personalInfo.jobTitle}</h2>
         <div className="flex items-center gap-x-3 gap-y-0.5 text-xs text-gray-600 mt-3 flex-wrap">
           {personalInfo.address && <p>{personalInfo.address}</p>}
@@ -33,7 +33,7 @@ export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
         {summary && (
           <section>
             <h3 className="font-mono text-xs font-bold uppercase tracking-widest mb-2" style={{ color: `hsl(${themeColor})` }}>{'//'} {t('summary')}</h3>
-            <p className="text-sm text-gray-700">{summary}</p>
+            <p className="text-sm text-black">{summary}</p>
           </section>
         )}
 
@@ -43,7 +43,7 @@ export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
             {experience.map(exp => (
               <div key={exp.id}>
                 <div className="flex justify-between items-baseline gap-x-4">
-                  <h4 className="font-bold text-sm text-gray-900">{exp.title}</h4>
+                  <h4 className="font-bold text-sm text-black">{exp.title}</h4>
                   <p className="font-mono text-[9pt] text-gray-500 whitespace-nowrap">{exp.startDate} - {exp.endDate}</p>
                 </div>
                 <p className="text-sm text-gray-600 font-medium mt-0.5">{exp.company}{exp.city ? `, ${exp.city}` : ''}</p>
@@ -61,7 +61,7 @@ export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
             {education.map(edu => (
               <div key={edu.id}>
                 <div className="flex justify-between items-baseline gap-x-4">
-                  <h4 className="font-bold text-sm text-gray-900">{edu.degree}</h4>
+                  <h4 className="font-bold text-sm text-black">{edu.degree}</h4>
                   <p className="font-mono text-[9pt] text-gray-500 whitespace-nowrap">{edu.startDate} - {edu.endDate}</p>
                 </div>
                 <p className="text-sm text-gray-600 mt-0.5">{edu.institution}{edu.city ? `, ${edu.city}` : ''}</p>
@@ -78,7 +78,7 @@ export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
             {skills.map(skill => skill.name && (
               <li
                 key={skill.id}
-                className="text-[9pt] font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded px-2 py-0.5 break-inside-avoid"
+                className="text-[9pt] font-medium text-black bg-gray-100 border border-gray-200 rounded px-2 py-0.5 break-inside-avoid"
               >
                 {skill.name}
               </li>
@@ -88,7 +88,7 @@ export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
 
         <section>
           <h3 className="font-mono text-xs font-bold uppercase tracking-widest mb-3" style={{ color: `hsl(${themeColor})` }}>{'//'} {t('languages')}</h3>
-          <ul className="text-sm text-gray-700 space-y-1">
+          <ul className="text-sm text-black space-y-1">
             {languages.map(lang => (
               <li key={lang.id}>
                 <span className="font-medium">{lang.name}</span>

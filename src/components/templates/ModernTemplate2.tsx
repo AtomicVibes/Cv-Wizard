@@ -6,7 +6,7 @@ import { LanguageProficiency } from './LanguageProficiency';
 export const ModernTemplate2 = ({ data, t, fontFamily, themeColor }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily }} className="bg-white text-gray-800 p-10 w-full aspect-[210/297] text-[10pt] leading-relaxed shadow-2xl rounded-lg">
+    <div style={{ fontFamily }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10pt] leading-relaxed shadow-2xl rounded-lg">
       <header className="flex flex-col items-center text-center mb-8 pb-6 border-b-2 border-primary/20">
         {personalInfo.showPhoto && personalInfo.photo && (
             <Image

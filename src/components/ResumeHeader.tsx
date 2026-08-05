@@ -22,6 +22,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { cn } from '@/lib/utils';
 
 const colorOptions = [
+  { name: 'Black', hsl: '0 0% 0%' },
   { name: 'Blue', hsl: '217 91% 60%' },
   { name: 'Green', hsl: '142 76% 36%' },
   { name: 'Red', hsl: '0 72% 51%' },

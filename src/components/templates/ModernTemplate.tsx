@@ -7,7 +7,7 @@ import { LanguageProficiency } from './LanguageProficiency';
 export const ModernTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-gray-800 p-10 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10pt] leading-normal shadow-2xl rounded-lg">
       
       {/* Header */}
       <header className="flex items-center space-x-8 rtl:space-x-reverse mb-8">

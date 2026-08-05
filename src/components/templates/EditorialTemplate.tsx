@@ -8,9 +8,9 @@ const serif = "'Playfair Display', Georgia, 'Times New Roman', serif";
 export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-gray-800 p-12 w-full aspect-[210/297] text-[10.5pt] leading-relaxed shadow-2xl rounded-lg">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-12 w-full aspect-[210/297] text-[10.5pt] leading-relaxed shadow-2xl rounded-lg">
       {/* Header — editorial serif masthead */}
-      <header className="mb-8 pb-6 border-b-2 border-gray-900">
+      <header className="mb-8 pb-6 border-b-2 border-black">
         {personalInfo.showPhoto && personalInfo.photo && (
           <div className="mb-5">
             <Image
@@ -38,7 +38,7 @@ export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
               {t('summary')}
               <span className="flex-1 border-t border-gray-300" aria-hidden="true" />
             </h3>
-            <p className="text-sm text-gray-700">{summary}</p>
+            <p className="text-sm text-black">{summary}</p>
           </section>
         )}
 
@@ -88,7 +88,7 @@ export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
             {t('skills')}
             <span className="flex-1 border-t border-gray-300" aria-hidden="true" />
           </h3>
-          <ul className="columns-2 text-sm text-gray-700 space-y-1">
+          <ul className="columns-2 text-sm text-black space-y-1">
             {skills.map(skill => skill.name && (
               <li key={skill.id} className="break-inside-avoid">
                 <span className="text-gray-400 ltr:mr-1.5 rtl:ml-1.5" aria-hidden="true">—</span>
@@ -103,7 +103,7 @@ export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
             {t('languages')}
             <span className="flex-1 border-t border-gray-300" aria-hidden="true" />
           </h3>
-          <ul className="text-sm text-gray-700 space-y-1.5">
+          <ul className="text-sm text-black space-y-1.5">
             {languages.map(lang => (
               <li key={lang.id}>
                 <span className="font-medium" style={{ fontFamily: serif }}>{lang.name}</span>

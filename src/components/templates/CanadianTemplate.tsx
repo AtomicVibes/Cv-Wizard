@@ -6,9 +6,9 @@ export const CanadianTemplate = ({ data, t, fontFamily, themeColor, fontSize }: 
   const { personalInfo, summary, experience, education, skills, languages } = data;
 
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-gray-800 p-10 w-full aspect-[210/297] text-[10pt] leading-relaxed shadow-2xl rounded-lg">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10pt] leading-relaxed shadow-2xl rounded-lg">
       <header className="text-center mb-6">
-        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">{personalInfo.name}</h1>
+        <h1 className="text-4xl font-extrabold tracking-tight text-black">{personalInfo.name}</h1>
         <h2 className="text-lg font-medium text-gray-600 mt-1">{personalInfo.jobTitle}</h2>
         <div className="flex justify-center items-center gap-x-5 gap-y-1 text-xs mt-3 text-gray-600 flex-wrap">
           {personalInfo.email && <p className="flex items-center gap-1.5"><Mail className="w-3 h-3"/>{personalInfo.email}</p>}
@@ -20,7 +20,7 @@ export const CanadianTemplate = ({ data, t, fontFamily, themeColor, fontSize }: 
       <main className="space-y-6">
         {summary && (
           <section>
-            <h3 className="text-base font-bold uppercase tracking-wider text-gray-800 border-b-2 border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
+            <h3 className="text-base font-bold uppercase tracking-wider text-black border-b-2 border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
               <FileText className="w-4 h-4" />
               {t('summary')}
             </h3>
@@ -29,7 +29,7 @@ export const CanadianTemplate = ({ data, t, fontFamily, themeColor, fontSize }: 
         )}
 
         <section>
-          <h3 className="text-base font-bold uppercase tracking-wider text-gray-800 border-b-2 border-gray-200 pb-1.5 mb-4 flex items-center gap-2">
+          <h3 className="text-base font-bold uppercase tracking-wider text-black border-b-2 border-gray-200 pb-1.5 mb-4 flex items-center gap-2">
             <Briefcase className="w-4 h-4" />
             {t('experience')}
           </h3>
@@ -40,7 +40,7 @@ export const CanadianTemplate = ({ data, t, fontFamily, themeColor, fontSize }: 
                   <h4 className="font-bold text-base">{exp.title}</h4>
                   <p className="text-[9pt] text-gray-500 font-medium">{exp.startDate && `${exp.startDate} -`} {exp.endDate}</p>
                 </div>
-                <p className="text-sm text-gray-700 font-semibold">{exp.company}{exp.city && `, ${exp.city}`}</p>
+                <p className="text-sm text-black font-semibold">{exp.company}{exp.city && `, ${exp.city}`}</p>
                 <ul className="mt-1.5 text-sm text-gray-600 list-disc ltr:pl-5 rtl:pr-5 space-y-1">
                   {exp.description.split('\n').map((line, i) => line.trim() && <li key={i}>{line.replace(/^- /, '')}</li>)}
                 </ul>
@@ -50,7 +50,7 @@ export const CanadianTemplate = ({ data, t, fontFamily, themeColor, fontSize }: 
         </section>
         
         <section>
-          <h3 className="text-base font-bold uppercase tracking-wider text-gray-800 border-b-2 border-gray-200 pb-1.5 mb-4 flex items-center gap-2">
+          <h3 className="text-base font-bold uppercase tracking-wider text-black border-b-2 border-gray-200 pb-1.5 mb-4 flex items-center gap-2">
             <GraduationCap className="w-4 h-4" />
             {t('education')}
           </h3>
@@ -61,7 +61,7 @@ export const CanadianTemplate = ({ data, t, fontFamily, themeColor, fontSize }: 
                    <h4 className="font-bold text-base">{edu.degree}</h4>
                    <p className="text-[9pt] text-gray-500 font-medium">{edu.startDate && `${edu.startDate} -`} {edu.endDate}</p>
                   </div>
-                <p className="text-sm text-gray-700 font-semibold">{edu.institution}{edu.city && `, ${edu.city}`}</p>
+                <p className="text-sm text-black font-semibold">{edu.institution}{edu.city && `, ${edu.city}`}</p>
               </div>
             ))}
           </div>
@@ -69,7 +69,7 @@ export const CanadianTemplate = ({ data, t, fontFamily, themeColor, fontSize }: 
 
         {skills.length > 0 && (
           <section>
-            <h3 className="text-base font-bold uppercase tracking-wider text-gray-800 border-b-2 border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
+            <h3 className="text-base font-bold uppercase tracking-wider text-black border-b-2 border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
               <Sparkles className="w-4 h-4" />
               {t('skills')}
             </h3>
@@ -83,14 +83,14 @@ export const CanadianTemplate = ({ data, t, fontFamily, themeColor, fontSize }: 
 
         {languages.length > 0 && (
           <section>
-            <h3 className="text-base font-bold uppercase tracking-wider text-gray-800 border-b-2 border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
+            <h3 className="text-base font-bold uppercase tracking-wider text-black border-b-2 border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
               <LanguagesIcon className="w-4 h-4" />
               {t('languages')}
             </h3>
             <ul className="text-sm space-y-3">
               {languages.map(lang => (
                 <li key={lang.id}>
-                <span className="font-medium text-gray-800">{lang.name}</span>
+                <span className="font-medium text-black">{lang.name}</span>
                 <LanguageProficiency proficiency={lang.proficiency} themeColor={themeColor} className="mt-1" />
               </li>
               ))}

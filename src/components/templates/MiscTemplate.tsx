@@ -6,7 +6,7 @@ import { LanguageProficiency } from './LanguageProficiency';
 export const MiscTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-gray-900 p-8 w-full aspect-[210/297] text-[11pt] leading-relaxed shadow-2xl rounded-lg">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-8 w-full aspect-[210/297] text-[11pt] leading-relaxed shadow-2xl rounded-lg">
       <header className="text-center mb-6 pb-4 border-b border-gray-200">
         {personalInfo.showPhoto && personalInfo.photo && (
           <div className="flex justify-center mb-4">
@@ -19,7 +19,7 @@ export const MiscTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
             />
           </div>
         )}
-        <h1 className="text-3xl font-light tracking-wide text-gray-900 mb-1">{personalInfo.name}</h1>
+        <h1 className="text-3xl font-light tracking-wide text-black mb-1">{personalInfo.name}</h1>
         <h2 className="text-lg font-normal text-gray-600 mb-3">{personalInfo.jobTitle}</h2>
         <div className="flex justify-center items-center gap-x-4 gap-y-1 text-sm text-gray-500 flex-wrap">
           <p className="flex items-center gap-1"><Mail className="w-3.5 h-3.5"/>{personalInfo.email}</p>
@@ -31,22 +31,22 @@ export const MiscTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
       <main className="space-y-6">
         {summary && (
           <section>
-            <h3 className="text-base font-semibold text-gray-800 mb-2 uppercase tracking-wider">{t('summary')}</h3>
-            <p className="text-sm text-gray-700 leading-relaxed">{summary}</p>
+            <h3 className="text-base font-semibold text-black mb-2 uppercase tracking-wider">{t('summary')}</h3>
+            <p className="text-sm text-black leading-relaxed">{summary}</p>
           </section>
         )}
 
         <section>
-          <h3 className="text-base font-semibold text-gray-800 mb-3 uppercase tracking-wider">{t('experience')}</h3>
+          <h3 className="text-base font-semibold text-black mb-3 uppercase tracking-wider">{t('experience')}</h3>
           <div className="space-y-4">
             {experience.map(exp => (
               <div key={exp.id} className="border-l-2 border-gray-200 pl-4">
                 <div className="flex justify-between items-start mb-1">
-                  <h4 className="text-sm font-semibold text-gray-900">{exp.title}</h4>
+                  <h4 className="text-sm font-semibold text-black">{exp.title}</h4>
                   <p className="text-xs text-gray-500">{exp.startDate} - {exp.endDate}</p>
                 </div>
                 <p className="text-sm text-gray-600 mb-2">{exp.company}, {exp.city}</p>
-                <ul className="text-sm text-gray-700 list-disc ltr:pl-4 rtl:pr-4 space-y-0.5">
+                <ul className="text-sm text-black list-disc ltr:pl-4 rtl:pr-4 space-y-0.5">
                   {exp.description.split('\n').map((line, i) => line.trim() && <li key={i}>{line.replace(/^- /, '')}</li>)}
                 </ul>
               </div>
@@ -55,12 +55,12 @@ export const MiscTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
         </section>
 
         <section>
-          <h3 className="text-base font-semibold text-gray-800 mb-3 uppercase tracking-wider">{t('education')}</h3>
+          <h3 className="text-base font-semibold text-black mb-3 uppercase tracking-wider">{t('education')}</h3>
           <div className="space-y-3">
             {education.map(edu => (
               <div key={edu.id} className="border-l-2 border-gray-200 pl-4">
                 <div className="flex justify-between items-start mb-1">
-                  <h4 className="text-sm font-semibold text-gray-900">{edu.degree}</h4>
+                  <h4 className="text-sm font-semibold text-black">{edu.degree}</h4>
                   <p className="text-xs text-gray-500">{edu.startDate} - {edu.endDate}</p>
                 </div>
                 <p className="text-sm text-gray-600">{edu.institution}, {edu.city}</p>
@@ -71,8 +71,8 @@ export const MiscTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
 
         <div className="grid grid-cols-2 gap-6">
           <section>
-            <h3 className="text-base font-semibold text-gray-800 mb-3 uppercase tracking-wider">{t('skills')}</h3>
-            <ul className="text-sm text-gray-700 space-y-1">
+            <h3 className="text-base font-semibold text-black mb-3 uppercase tracking-wider">{t('skills')}</h3>
+            <ul className="text-sm text-black space-y-1">
               {skills.map(skill => skill.name && (
                 <li key={skill.id} className="flex items-center">
                   <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2 rtl:ml-2 rtl:mr-0"></span>
@@ -83,11 +83,11 @@ export const MiscTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
           </section>
 
           <section>
-            <h3 className="text-base font-semibold text-gray-800 mb-3 uppercase tracking-wider">{t('languages')}</h3>
+            <h3 className="text-base font-semibold text-black mb-3 uppercase tracking-wider">{t('languages')}</h3>
             <ul className="text-sm space-y-2">
               {languages.map(lang => (
                 <li key={lang.id}>
-                  <span className="font-medium text-gray-900">{lang.name}</span>
+                  <span className="font-medium text-black">{lang.name}</span>
                   <LanguageProficiency proficiency={lang.proficiency} themeColor={themeColor} className="mt-1" />
                 </li>
               ))}

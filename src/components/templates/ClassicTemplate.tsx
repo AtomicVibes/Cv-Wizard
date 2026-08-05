@@ -6,7 +6,7 @@ import { LanguageProficiency } from './LanguageProficiency';
 export const ClassicTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
-    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-gray-900 p-10 w-full aspect-[210/297] text-[10.5pt] leading-relaxed shadow-2xl rounded-lg">
+    <div style={{ fontFamily, fontSize: `${fontSize}%` }} className="bg-white text-black p-10 w-full aspect-[210/297] text-[10.5pt] leading-relaxed shadow-2xl rounded-lg">
       <header className="text-center mb-8 pb-4" style={{ borderBottom: `4px solid hsl(${themeColor})` }}>
         {personalInfo.showPhoto && personalInfo.photo && (
           <div className="flex justify-center mb-4">
@@ -19,8 +19,8 @@ export const ClassicTemplate = ({ data, t, fontFamily, themeColor, fontSize }: {
             />
           </div>
         )}
-        <h1 className="text-5xl font-bold tracking-widest uppercase text-gray-900">{personalInfo.name}</h1>
-        <h2 className="text-xl font-light tracking-wider text-gray-700 mt-2">{personalInfo.jobTitle}</h2>
+        <h1 className="text-5xl font-bold tracking-widest uppercase text-black">{personalInfo.name}</h1>
+        <h2 className="text-xl font-light tracking-wider text-black mt-2">{personalInfo.jobTitle}</h2>
         <div className="flex justify-center items-center gap-x-6 gap-y-1 text-xs mt-4 text-gray-600 flex-wrap">
           <p className="flex items-center gap-2"><Mail className="w-3 h-3"/>{personalInfo.email}</p>
           <p className="flex items-center gap-2"><Phone className="w-3 h-3"/>{personalInfo.phone}</p>
@@ -45,8 +45,8 @@ export const ClassicTemplate = ({ data, t, fontFamily, themeColor, fontSize }: {
                   <h4 className="text-base font-bold">{exp.title}</h4>
                   <p className="text-xs text-gray-600 font-medium">{exp.startDate} - {exp.endDate}</p>
                 </div>
-                <p className="text-sm italic text-gray-700">{exp.company}, {exp.city}</p>
-                <ul className="mt-2 text-sm text-gray-700 list-disc ltr:pl-5 rtl:pr-5 space-y-1">
+                <p className="text-sm italic text-black">{exp.company}, {exp.city}</p>
+                <ul className="mt-2 text-sm text-black list-disc ltr:pl-5 rtl:pr-5 space-y-1">
                   {exp.description.split('\n').map((line, i) => line.trim() && <li key={i}>{line.replace(/^- /, '')}</li>)}
                 </ul>
               </div>
@@ -63,7 +63,7 @@ export const ClassicTemplate = ({ data, t, fontFamily, themeColor, fontSize }: {
                    <h4 className="text-base font-bold">{edu.degree}</h4>
                    <p className="text-xs text-gray-600 font-medium">{edu.startDate} - {edu.endDate}</p>
                 </div>
-                <p className="text-sm italic text-gray-700">{edu.institution}, {edu.city}</p>
+                <p className="text-sm italic text-black">{edu.institution}, {edu.city}</p>
               </div>
             ))}
           </div>

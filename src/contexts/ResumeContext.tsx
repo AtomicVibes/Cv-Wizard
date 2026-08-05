@@ -202,7 +202,7 @@ export const ResumeProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<LanguageOption>('en');
   const [template, setTemplate] = useState<TemplateOption>('modern');
   const [font, setFont] = useState<FontOption>('playfair-display');
-  const [themeColor, setThemeColor] = useState('217 91% 60%'); // Default blue
+  const [themeColor, setThemeColor] = useState('0 0% 0%'); // Default black
   const [fontSize, setFontSize] = useState(100); // Default 100%
   const [userId, setUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
