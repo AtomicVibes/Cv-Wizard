@@ -10,7 +10,7 @@ const GolfBallIcon = () => (
 );
 
 const Section = ({ icon, title, children, className }: { icon: React.ReactNode, title: string, children: React.ReactNode, className?: string }) => (
-  <section className={className}>
+  <section className={className ? `resume-section ${className}` : 'resume-section'}>
     <h3 className="text-sm font-bold uppercase tracking-widest text-blue-900 mb-3 flex items-center gap-2">
       {icon}
       {title}
@@ -49,7 +49,7 @@ export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Resum
 
         <main className="flex flex-col gap-4">
             {summary && (
-              <section>
+              <section className="resume-section">
                 <p className="text-sm text-black italic border-l-4 border-blue-200/80 pl-4 py-2 bg-blue-50/50 rounded-r-md">{summary}</p>
               </section>
             )}
@@ -57,7 +57,7 @@ export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Resum
             <Section icon={<Briefcase className="w-4 h-4" />} title={t('experience')}>
                 <div className="space-y-4">
                     {experience.map(exp => (
-                    <div key={exp.id}>
+                    <div key={exp.id} className="experience-item">
                         <div className="flex justify-between items-baseline">
                         <h4 className="font-bold text-base">{exp.title}</h4>
                         <p className="text-[9pt] text-gray-500 font-medium">{exp.startDate && `${exp.startDate} -`} {exp.endDate}</p>
@@ -74,7 +74,7 @@ export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Resum
             <Section icon={<GraduationCap className="w-4 h-4" />} title={t('education')}>
               <div className="space-y-3">
                 {education.map(edu => (
-                  <div key={edu.id}>
+                  <div key={edu.id} className="education-item">
                      <div className="flex justify-between items-baseline">
                         <h4 className="font-bold text-base">{edu.degree}</h4>
                         <p className="text-[9pt] text-gray-500 font-medium">{edu.startDate && `${edu.startDate} -`} {edu.endDate}</p>
@@ -86,7 +86,7 @@ export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Resum
             </Section>
 
              <Section icon={<Sparkles className="w-4 h-4"/>} title="Core Competencies">
-                <ul className="text-sm space-y-1 columns-3">
+                <ul className="text-sm space-y-1 columns-3 resume-skill-group">
                     {skills.map(skill => skill.name && (
                         <li key={skill.id} className="flex items-center gap-2"><GolfBallIcon/>{skill.name}</li>
                     ))}

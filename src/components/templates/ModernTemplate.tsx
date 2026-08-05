@@ -35,17 +35,17 @@ export const ModernTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { 
       
       <div className="space-y-4">
         {summary && (
-          <section>
+          <section className="resume-section">
             <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b-2 pb-1.5 flex items-center gap-2" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor} / 0.1)` }}><FileText className="w-4 h-4"/>{t('summary')}</h3>
             <p className="text-sm">{summary}</p>
           </section>
         )}
 
-        <section>
+        <section className="resume-section">
           <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b-2 pb-1.5 flex items-center gap-2" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor} / 0.1)` }}><Briefcase className="w-4 h-4"/>{t('experience')}</h3>
           <div className="space-y-4">
             {experience.map(exp => (
-              <div key={exp.id}>
+              <div key={exp.id} className="experience-item">
                 <div className="flex justify-between items-baseline">
                   <h4 className="font-bold text-base">{exp.title}</h4>
                   <p className="text-[9pt] text-gray-500 font-medium">{exp.startDate} - {exp.endDate}</p>
@@ -59,11 +59,11 @@ export const ModernTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { 
           </div>
         </section>
         
-        <section>
+        <section className="resume-section">
           <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b-2 pb-1.5 flex items-center gap-2" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor} / 0.1)` }}><GraduationCap className="w-4 h-4"/>{t('education')}</h3>
           <div className="space-y-3">
             {education.map(edu => (
-              <div key={edu.id}>
+              <div key={edu.id} className="education-item">
                  <div className="flex justify-between items-baseline">
                    <h4 className="font-bold text-base">{edu.degree}</h4>
                    <p className="text-[9pt] text-gray-500 font-medium">{edu.startDate} - {edu.endDate}</p>
@@ -76,16 +76,16 @@ export const ModernTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { 
 
         <ResumePageBreak />
 
-        <section>
+        <section className="resume-section">
             <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b-2 pb-1.5 flex items-center gap-2" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor} / 0.1)` }}><Sparkles className="w-4 h-4"/>{t('skills')}</h3>
-            <ul className="columns-3 text-sm list-disc ltr:pl-5 rtl:pr-5">
+            <ul className="columns-3 text-sm list-disc ltr:pl-5 rtl:pr-5 resume-skill-group">
               {skills.map(skill => skill.name && (
                 <li key={skill.id} className="mb-1">{skill.name}</li>
               ))}
             </ul>
         </section>
 
-        <section>
+        <section className="resume-section">
             <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b-2 pb-1.5 flex items-center gap-2" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor} / 0.1)` }}><LanguagesIcon className="w-4 h-4"/>{t('languages')}</h3>
             <ul className="space-y-2 text-sm">
               {languages.map(lang => (

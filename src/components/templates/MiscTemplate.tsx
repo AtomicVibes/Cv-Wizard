@@ -30,17 +30,17 @@ export const MiscTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
 
       <main className="space-y-4">
         {summary && (
-          <section>
+          <section className="resume-section">
             <h3 className="text-base font-semibold text-black mb-1.5 uppercase tracking-wider">{t('summary')}</h3>
             <p className="text-sm text-black leading-normal">{summary}</p>
           </section>
         )}
 
-        <section>
+        <section className="resume-section">
           <h3 className="text-base font-semibold text-black mb-2 uppercase tracking-wider">{t('experience')}</h3>
           <div className="space-y-4">
             {experience.map(exp => (
-              <div key={exp.id} className="border-l-2 border-gray-200 pl-4">
+              <div key={exp.id} className="experience-item border-l-2 border-gray-200 pl-4">
                 <div className="flex justify-between items-start mb-1">
                   <h4 className="text-sm font-semibold text-black">{exp.title}</h4>
                   <p className="text-xs text-gray-500">{exp.startDate} - {exp.endDate}</p>
@@ -54,11 +54,11 @@ export const MiscTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
           </div>
         </section>
 
-        <section>
+        <section className="resume-section">
           <h3 className="text-base font-semibold text-black mb-2 uppercase tracking-wider">{t('education')}</h3>
           <div className="space-y-3">
             {education.map(edu => (
-              <div key={edu.id} className="border-l-2 border-gray-200 pl-4">
+              <div key={edu.id} className="education-item border-l-2 border-gray-200 pl-4">
                 <div className="flex justify-between items-start mb-1">
                   <h4 className="text-sm font-semibold text-black">{edu.degree}</h4>
                   <p className="text-xs text-gray-500">{edu.startDate} - {edu.endDate}</p>
@@ -70,9 +70,9 @@ export const MiscTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
         </section>
 
         <div className="grid grid-cols-2 gap-4">
-          <section>
+          <section className="resume-section">
             <h3 className="text-base font-semibold text-black mb-2 uppercase tracking-wider">{t('skills')}</h3>
-            <ul className="text-sm text-black space-y-1">
+            <ul className="text-sm text-black space-y-1 resume-skill-group">
               {skills.map(skill => skill.name && (
                 <li key={skill.id} className="flex items-center">
                   <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2 rtl:ml-2 rtl:mr-0"></span>
@@ -82,7 +82,7 @@ export const MiscTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
             </ul>
           </section>
 
-          <section>
+          <section className="resume-section">
             <h3 className="text-base font-semibold text-black mb-2 uppercase tracking-wider">{t('languages')}</h3>
             <ul className="text-sm space-y-1.5">
               {languages.map(lang => (

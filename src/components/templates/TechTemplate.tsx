@@ -31,17 +31,17 @@ export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
 
       <main className="space-y-4">
         {summary && (
-          <section>
+          <section className="resume-section">
             <h3 className="font-mono text-xs font-bold uppercase tracking-widest mb-2" style={{ color: `hsl(${themeColor})` }}>{'//'} {t('summary')}</h3>
             <p className="text-sm text-black">{summary}</p>
           </section>
         )}
 
-        <section>
+        <section className="resume-section">
           <h3 className="font-mono text-xs font-bold uppercase tracking-widest mb-3" style={{ color: `hsl(${themeColor})` }}>{'//'} {t('experience')}</h3>
           <div className="space-y-4">
             {experience.map(exp => (
-              <div key={exp.id}>
+              <div key={exp.id} className="experience-item">
                 <div className="flex justify-between items-baseline gap-x-4">
                   <h4 className="font-bold text-sm text-black">{exp.title}</h4>
                   <p className="font-mono text-[9pt] text-gray-500 whitespace-nowrap">{exp.startDate} - {exp.endDate}</p>
@@ -55,11 +55,11 @@ export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
           </div>
         </section>
 
-        <section>
+        <section className="resume-section">
           <h3 className="font-mono text-xs font-bold uppercase tracking-widest mb-3" style={{ color: `hsl(${themeColor})` }}>{'//'} {t('education')}</h3>
           <div className="space-y-3">
             {education.map(edu => (
-              <div key={edu.id}>
+              <div key={edu.id} className="education-item">
                 <div className="flex justify-between items-baseline gap-x-4">
                   <h4 className="font-bold text-sm text-black">{edu.degree}</h4>
                   <p className="font-mono text-[9pt] text-gray-500 whitespace-nowrap">{edu.startDate} - {edu.endDate}</p>
@@ -72,9 +72,9 @@ export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
 
         <ResumePageBreak />
 
-        <section>
+        <section className="resume-section">
           <h3 className="font-mono text-xs font-bold uppercase tracking-widest mb-3" style={{ color: `hsl(${themeColor})` }}>{'//'} {t('skills')}</h3>
-          <ul className="flex flex-wrap gap-1.5">
+          <ul className="flex flex-wrap gap-1.5 resume-skill-group">
             {skills.map(skill => skill.name && (
               <li
                 key={skill.id}
@@ -86,7 +86,7 @@ export const TechTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { da
           </ul>
         </section>
 
-        <section>
+        <section className="resume-section">
           <h3 className="font-mono text-xs font-bold uppercase tracking-widest mb-3" style={{ color: `hsl(${themeColor})` }}>{'//'} {t('languages')}</h3>
           <ul className="text-sm text-black space-y-1">
             {languages.map(lang => (

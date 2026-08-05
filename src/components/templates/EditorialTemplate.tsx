@@ -33,7 +33,7 @@ export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
 
       <main className="space-y-4">
         {summary && (
-          <section>
+          <section className="resume-section">
             <h3 className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] font-semibold mb-3" style={{ fontFamily: serif }}>
               {t('summary')}
               <span className="flex-1 border-t border-gray-300" aria-hidden="true" />
@@ -42,14 +42,14 @@ export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
           </section>
         )}
 
-        <section>
+        <section className="resume-section">
           <h3 className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] font-semibold mb-3" style={{ fontFamily: serif }}>
             {t('experience')}
             <span className="flex-1 border-t border-gray-300" aria-hidden="true" />
           </h3>
           <div className="space-y-4">
             {experience.map(exp => (
-              <div key={exp.id}>
+              <div key={exp.id} className="experience-item">
                 <div className="flex justify-between items-baseline gap-x-4">
                   <h4 className="text-base font-semibold" style={{ fontFamily: serif }}>{exp.title}</h4>
                   <p className="text-[9pt] text-gray-500 uppercase tracking-wider whitespace-nowrap">{exp.startDate} — {exp.endDate}</p>
@@ -63,14 +63,14 @@ export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
           </div>
         </section>
 
-        <section>
+        <section className="resume-section">
           <h3 className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] font-semibold mb-3" style={{ fontFamily: serif }}>
             {t('education')}
             <span className="flex-1 border-t border-gray-300" aria-hidden="true" />
           </h3>
           <div className="space-y-3">
             {education.map(edu => (
-              <div key={edu.id}>
+              <div key={edu.id} className="education-item">
                 <div className="flex justify-between items-baseline gap-x-4">
                   <h4 className="text-sm font-semibold" style={{ fontFamily: serif }}>{edu.degree}</h4>
                   <p className="text-[9pt] text-gray-500 uppercase tracking-wider whitespace-nowrap">{edu.startDate} — {edu.endDate}</p>
@@ -83,12 +83,12 @@ export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
 
         <ResumePageBreak />
 
-        <section>
+        <section className="resume-section">
           <h3 className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] font-semibold mb-3" style={{ fontFamily: serif }}>
             {t('skills')}
             <span className="flex-1 border-t border-gray-300" aria-hidden="true" />
           </h3>
-          <ul className="columns-2 text-sm text-black space-y-1">
+          <ul className="columns-2 text-sm text-black space-y-1 resume-skill-group">
             {skills.map(skill => skill.name && (
               <li key={skill.id} className="break-inside-avoid">
                 <span className="text-gray-400 ltr:mr-1.5 rtl:ml-1.5" aria-hidden="true">—</span>
@@ -98,7 +98,7 @@ export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
           </ul>
         </section>
 
-        <section>
+        <section className="resume-section">
           <h3 className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] font-semibold mb-3" style={{ fontFamily: serif }}>
             {t('languages')}
             <span className="flex-1 border-t border-gray-300" aria-hidden="true" />

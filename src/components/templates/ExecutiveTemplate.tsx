@@ -35,17 +35,17 @@ export const ExecutiveTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
 
       <main className="space-y-4">
         {summary && (
-          <section className="pb-4 border-b border-gray-100">
+          <section className="resume-section pb-4 border-b border-gray-100">
             <h3 className="text-xs font-bold uppercase tracking-widest text-black mb-2">{t('summary')}</h3>
             <p className="text-sm text-black">{summary}</p>
           </section>
         )}
 
-        <section className="pb-4 border-b border-gray-100">
+        <section className="resume-section pb-4 border-b border-gray-100">
           <h3 className="text-xs font-bold uppercase tracking-widest text-black mb-3">{t('experience')}</h3>
           <div className="space-y-4">
             {experience.map(exp => (
-              <div key={exp.id}>
+              <div key={exp.id} className="experience-item">
                 <div className="grid grid-cols-[1fr_auto] items-baseline gap-x-4">
                   <h4 className="font-bold text-sm text-black">{exp.title}</h4>
                   <p className="text-[9pt] text-gray-500 font-medium whitespace-nowrap">{exp.startDate} - {exp.endDate}</p>
@@ -59,11 +59,11 @@ export const ExecutiveTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
           </div>
         </section>
 
-        <section className="pb-4 border-b border-gray-100">
+        <section className="resume-section pb-4 border-b border-gray-100">
           <h3 className="text-xs font-bold uppercase tracking-widest text-black mb-3">{t('education')}</h3>
           <div className="space-y-3">
             {education.map(edu => (
-              <div key={edu.id}>
+              <div key={edu.id} className="education-item">
                 <div className="grid grid-cols-[1fr_auto] items-baseline gap-x-4">
                   <h4 className="font-bold text-sm text-black">{edu.degree}</h4>
                   <p className="text-[9pt] text-gray-500 font-medium whitespace-nowrap">{edu.startDate} - {edu.endDate}</p>
@@ -76,16 +76,16 @@ export const ExecutiveTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
 
         <ResumePageBreak />
 
-        <section className="pb-4 border-b border-gray-100">
+        <section className="resume-section pb-4 border-b border-gray-100">
           <h3 className="text-xs font-bold uppercase tracking-widest text-black mb-3">{t('skills')}</h3>
-          <ul className="columns-2 text-sm text-black list-disc ltr:pl-4 rtl:pr-4">
+          <ul className="columns-2 text-sm text-black list-disc ltr:pl-4 rtl:pr-4 resume-skill-group">
             {skills.map(skill => skill.name && (
               <li key={skill.id} className="mb-1 break-inside-avoid">{skill.name}</li>
             ))}
           </ul>
         </section>
 
-        <section>
+        <section className="resume-section">
           <h3 className="text-xs font-bold uppercase tracking-widest text-black mb-3">{t('languages')}</h3>
           <ul className="text-sm text-black space-y-1">
             {languages.map(lang => (

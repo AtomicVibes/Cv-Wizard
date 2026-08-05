@@ -6,7 +6,7 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
   const { personalInfo, summary, experience, education, skills, languages } = data;
 
   const Section = ({ icon, title, children }: { icon: React.ReactNode, title: string, children: React.ReactNode }) => (
-    <section>
+    <section className="resume-section">
       <h3 className="text-lg font-bold text-black mb-3 flex items-center gap-3 border-b-2 border-gray-100 pb-2">
         <span className="bg-gray-200 p-2 rounded-md">{icon}</span>
         {title}
@@ -40,7 +40,7 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
         <Section icon={<Briefcase className="w-4 h-4" />} title={t('experience')}>
           <div className="space-y-4">
             {experience.map(exp => (
-              <div key={exp.id}>
+              <div key={exp.id} className="experience-item">
                 <div className="flex justify-between items-baseline">
                   <h4 className="font-bold text-base">{exp.title}</h4>
                   <p className="text-[9pt] text-gray-500 font-medium">{exp.startDate && `${exp.startDate} -`} {exp.endDate}</p>
@@ -57,7 +57,7 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
         <Section icon={<GraduationCap className="w-4 h-4" />} title={t('education')}>
           <div className="space-y-3">
             {education.map(edu => (
-              <div key={edu.id}>
+              <div key={edu.id} className="education-item">
                 <div className="flex justify-between items-baseline">
                   <h4 className="font-bold text-base">{edu.degree}</h4>
                   <p className="text-[9pt] text-gray-500 font-medium">{edu.startDate && `${edu.startDate} -`} {edu.endDate}</p>
@@ -70,7 +70,7 @@ export const CanadianTemplate2 = ({ data, t, fontFamily, themeColor, fontSize }:
 
         {skills.length > 0 && (
           <Section icon={<Sparkles className="w-4 h-4" />} title={t('skills')}>
-            <ul className="text-sm list-inside list-disc space-y-1 columns-3">
+            <ul className="text-sm list-inside list-disc space-y-1 columns-3 resume-skill-group">
               {skills.map(skill => skill.name && (
                 <li key={skill.id}>{skill.name}</li>
               ))}

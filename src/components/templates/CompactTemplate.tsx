@@ -37,17 +37,17 @@ export const CompactTemplate = ({ data, t, fontFamily, themeColor, fontSize }: {
 
       <main className="space-y-3">
         {summary && (
-          <section>
+          <section className="resume-section">
             <h3 className="text-[10pt] font-bold uppercase tracking-wider text-black border-b border-gray-200 pb-1 mb-2">{t('summary')}</h3>
             <p className="text-[9.5pt] text-black">{summary}</p>
           </section>
         )}
 
-        <section>
+        <section className="resume-section">
           <h3 className="text-[10pt] font-bold uppercase tracking-wider text-black border-b border-gray-200 pb-1 mb-2">{t('experience')}</h3>
           <div className="divide-y divide-gray-200">
             {experience.map(exp => (
-              <div key={exp.id} className="py-1.5 first:pt-0 last:pb-0">
+              <div key={exp.id} className="experience-item py-1.5 first:pt-0 last:pb-0">
                 <div className="flex justify-between items-baseline gap-x-3">
                   <h4 className="font-bold text-[9.5pt] text-black">{exp.title} <span className="font-medium text-gray-600">— {exp.company}{exp.city ? `, ${exp.city}` : ''}</span></h4>
                   <p className="text-[8pt] text-gray-500 font-medium whitespace-nowrap">{exp.startDate} - {exp.endDate}</p>
@@ -60,11 +60,11 @@ export const CompactTemplate = ({ data, t, fontFamily, themeColor, fontSize }: {
           </div>
         </section>
 
-        <section>
+        <section className="resume-section">
           <h3 className="text-[10pt] font-bold uppercase tracking-wider text-black border-b border-gray-200 pb-1 mb-2">{t('education')}</h3>
           <div className="divide-y divide-gray-200">
             {education.map(edu => (
-              <div key={edu.id} className="py-1 first:pt-0 last:pb-0 flex justify-between items-baseline gap-x-3">
+              <div key={edu.id} className="education-item py-1 first:pt-0 last:pb-0 flex justify-between items-baseline gap-x-3">
                 <h4 className="font-bold text-[9.5pt] text-black">{edu.degree} <span className="font-medium text-gray-600">— {edu.institution}{edu.city ? `, ${edu.city}` : ''}</span></h4>
                 <p className="text-[8pt] text-gray-500 font-medium whitespace-nowrap">{edu.startDate} - {edu.endDate}</p>
               </div>
@@ -74,9 +74,9 @@ export const CompactTemplate = ({ data, t, fontFamily, themeColor, fontSize }: {
 
         <ResumePageBreak />
 
-        <section>
+        <section className="resume-section">
           <h3 className="text-[10pt] font-bold uppercase tracking-wider text-black border-b border-gray-200 pb-1 mb-2">{t('skills')}</h3>
-          <ul className="flex flex-wrap gap-x-1.5 gap-y-0.5 text-[9pt] text-black">
+          <ul className="resume-skill-group flex flex-wrap gap-x-1.5 gap-y-0.5 text-[9pt] text-black">
             {skills.map((skill, index) => skill.name && (
               <li key={skill.id}>
                 {skill.name}{index < skills.filter(s => s.name).length - 1 ? <span className="text-gray-400">,</span> : ''}
@@ -85,7 +85,7 @@ export const CompactTemplate = ({ data, t, fontFamily, themeColor, fontSize }: {
           </ul>
         </section>
 
-        <section>
+        <section className="resume-section">
           <h3 className="text-[10pt] font-bold uppercase tracking-wider text-black border-b border-gray-200 pb-1 mb-2">{t('languages')}</h3>
           <ul className="text-[9pt] text-black">
             {languages.map((lang, index) => (

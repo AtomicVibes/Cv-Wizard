@@ -28,17 +28,17 @@ export const ModernTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Res
 
       <main className="space-y-4">
             {summary && (
-            <section>
+            <section className="resume-section">
                 <h3 className="text-base font-bold uppercase tracking-widest text-primary mb-3 flex items-center gap-2"><FileText className="w-4 h-4"/>{t('summary')}</h3>
                 <p className="text-sm">{summary}</p>
             </section>
             )}
             
-            <section>
+            <section className="resume-section">
                 <h3 className="text-base font-bold uppercase tracking-widest text-primary mb-3 flex items-center gap-2"><Briefcase className="w-4 h-4"/>{t('experience')}</h3>
                 <div className="space-y-4">
                 {experience.map(exp => (
-                    <div key={exp.id} className="relative ltr:pl-6 rtl:pr-6">
+                    <div key={exp.id} className="experience-item relative ltr:pl-6 rtl:pr-6">
                         <div className="absolute top-1 ltr:left-0 rtl:right-0 h-full w-px bg-primary/20"></div>
                         <div className="absolute top-1 ltr:left-[-4.5px] rtl:right-[-4.5px] w-2.5 h-2.5 bg-primary rounded-full border-2 border-white"></div>
                         <div className="flex justify-between items-baseline">
@@ -54,11 +54,11 @@ export const ModernTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Res
                 </div>
             </section>
             
-            <section>
+            <section className="resume-section">
                 <h3 className="text-base font-bold uppercase tracking-widest text-primary mb-3 flex items-center gap-2"><GraduationCap className="w-4 h-4"/>{t('education')}</h3>
                 <div className="space-y-3">
                 {education.map(edu => (
-                    <div key={edu.id}>
+                    <div key={edu.id} className="education-item">
                     <h4 className="font-bold text-sm">{edu.degree}</h4>
                     <p className="text-xs text-gray-600 font-semibold">{edu.institution}</p>
                     <p className="text-xs text-gray-500">{edu.city}</p>
@@ -68,16 +68,16 @@ export const ModernTemplate2 = ({ data, t, fontFamily, themeColor }: { data: Res
                 </div>
             </section>
 
-            <section>
+            <section className="resume-section">
               <h3 className="text-base font-bold uppercase tracking-widest text-primary mb-3 flex items-center gap-2"><Sparkles className="w-4 h-4"/>{t('skills')}</h3>
-              <div className="flex flex-wrap gap-2 text-xs">
+              <div className="resume-skill-group flex flex-wrap gap-2 text-xs">
                 {skills.map(skill => skill.name && (
                   <span key={skill.id} className="bg-primary/10 text-primary font-medium px-3 py-1 rounded-full">{skill.name}</span>
                 ))}
               </div>
             </section>
             
-            <section>
+            <section className="resume-section">
               <h3 className="text-base font-bold uppercase tracking-widest text-primary mb-3 flex items-center gap-2"><LanguagesIcon className="w-4 h-4"/>{t('languages')}</h3>
               <ul className="space-y-2 text-sm">
                 {languages.map(lang => (

@@ -33,7 +33,7 @@ export const GolfTemplate = ({ data, t, fontFamily, themeColor }: { data: Resume
 
       <main className="space-y-4">
         {summary && (
-          <section>
+          <section className="resume-section">
             <h3 className="text-sm font-bold uppercase tracking-wider text-green-800 border-b border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
               <UserCheck className="w-4 h-4" />
               {t('summary')}
@@ -42,14 +42,14 @@ export const GolfTemplate = ({ data, t, fontFamily, themeColor }: { data: Resume
           </section>
         )}
 
-        <section>
+        <section className="resume-section">
           <h3 className="text-sm font-bold uppercase tracking-wider text-green-800 border-b border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
             <Briefcase className="w-4 h-4" />
             {t('experience')}
           </h3>
           <div className="space-y-4">
             {experience.map(exp => (
-              <div key={exp.id}>
+              <div key={exp.id} className="experience-item">
                 <div className="flex justify-between items-baseline">
                   <h4 className="font-semibold text-base">{exp.title}</h4>
                   <p className="text-[9pt] text-gray-500 font-medium">{exp.startDate && `${exp.startDate} -`} {exp.endDate}</p>
@@ -64,14 +64,14 @@ export const GolfTemplate = ({ data, t, fontFamily, themeColor }: { data: Resume
         </section>
         
         {education.length > 0 && (
-          <section>
+          <section className="resume-section">
             <h3 className="text-sm font-bold uppercase tracking-wider text-green-800 border-b border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
               <GraduationCap className="w-4 h-4" />
               {t('education')}
             </h3>
             <div className="space-y-3">
               {education.map(edu => (
-                <div key={edu.id}>
+                <div key={edu.id} className="education-item">
                     <div className="flex justify-between items-baseline">
                       <h4 className="font-semibold text-base">{edu.degree}</h4>
                       <p className="text-[9pt] text-gray-500 font-medium">{edu.startDate && `${edu.startDate} -`} {edu.endDate}</p>
@@ -84,12 +84,12 @@ export const GolfTemplate = ({ data, t, fontFamily, themeColor }: { data: Resume
         )}
 
         {skills.length > 0 && (
-          <section>
+          <section className="resume-section">
             <h3 className="text-sm font-bold uppercase tracking-wider text-green-800 border-b border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
               <Sparkles className="w-4 h-4" />
               Core Competencies
             </h3>
-            <ul className="text-sm columns-3 gap-x-6 list-disc ltr:pl-5 rtl:pr-5 marker:text-green-700">
+            <ul className="text-sm columns-3 gap-x-6 list-disc ltr:pl-5 rtl:pr-5 marker:text-green-700 resume-skill-group">
               {skills.map(skill => skill.name && (
                 <li key={skill.id} className="mb-1">{skill.name}</li>
               ))}
@@ -98,7 +98,7 @@ export const GolfTemplate = ({ data, t, fontFamily, themeColor }: { data: Resume
         )}
         
         {languages.length > 0 && (
-            <section>
+            <section className="resume-section">
               <h3 className="text-sm font-bold uppercase tracking-wider text-green-800 border-b border-gray-200 pb-1.5 mb-3 flex items-center gap-2">
                 <Trophy className="w-4 h-4" />
                 Certifications & Achievements

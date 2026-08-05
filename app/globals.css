@@ -100,8 +100,8 @@
       box-shadow: none !important;
       border-radius: 0 !important;
       overflow: hidden;
-      page-break-after: avoid;
-      break-after: avoid;
+      break-after: auto;
+      break-before: auto;
     }
     .resume-preview-content {
       box-shadow: none !important;
@@ -110,8 +110,22 @@
       width: 100% !important;
       height: 100% !important;
       border-radius: 0 !important;
-      page-break-after: avoid;
+      break-after: auto;
+      break-before: auto;
+    }
+    .resume-section, .experience-item, .education-item, .resume-skill-group {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      break-after: auto;
+      break-before: auto;
+    }
+    h2, h3 {
       break-after: avoid;
+      page-break-after: avoid;
+    }
+    p, h2, h3 {
+      orphans: 3;
+      widows: 3;
     }
     html, body, .resume-preview-wrapper, .resume-preview-content {
       background-color: #fff !important;
@@ -122,6 +136,7 @@
     }
     .page-break {
       page-break-before: always;
+      break-before: page;
     }
   }
 }
