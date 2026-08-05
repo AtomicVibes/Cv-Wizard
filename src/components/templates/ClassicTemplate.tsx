@@ -1,34 +1,7 @@
 import type { ResumeData } from '@/lib/types';
 import Image from 'next/image';
 import { Mail, Phone, MapPin, Briefcase, GraduationCap, Sparkles, Languages as LanguagesIcon, FileText } from 'lucide-react';
-import { Progress } from '../ui/progress';
-
-const proficiencyToValue = (proficiency: 'Beginner' | 'Intermediate' | 'Advanced' | 'Native') => {
-  switch (proficiency) {
-    case 'Beginner': return 25;
-    case 'Intermediate': return 50;
-    case 'Advanced': return 75;
-    case 'Native': return 100;
-    default: return 0;
-  }
-}
-
-const renderLanguageProficiency = (proficiency: 'Beginner' | 'Intermediate' | 'Advanced' | 'Native') => {
-  const dots = proficiency === 'Beginner' ? 1 :
-               proficiency === 'Intermediate' ? 2 :
-               proficiency === 'Advanced' ? 3 : 5; // Native
-
-  return (
-    <div className="flex gap-1">
-      {[...Array(5)].map((_, i) => (
-        <div
-          key={i}
-          className={`w-2 h-2 rounded-full ${i < dots ? 'bg-gray-800' : 'bg-gray-300'}`}
-        />
-      ))}
-    </div>
-  );
-}
+import { LanguageProficiency } from './LanguageProficiency';
 
 export const ClassicTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
@@ -110,11 +83,8 @@ export const ClassicTemplate = ({ data, t, fontFamily, themeColor, fontSize }: {
           <ul className="text-sm space-y-3">
             {languages.map(lang => (
               <li key={lang.id}>
-                <div className="flex justify-between items-center mb-1">
-                  <span>{lang.name}</span>
-                  <span className="text-gray-600 text-xs">{t(lang.proficiency.toLowerCase())}</span>
-                </div>
-                {renderLanguageProficiency(lang.proficiency)}
+                <span className="font-medium">{lang.name}</span>
+                <LanguageProficiency proficiency={lang.proficiency} themeColor={themeColor} className="mt-1" />
               </li>
             ))}
           </ul>

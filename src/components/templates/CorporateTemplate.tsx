@@ -1,6 +1,7 @@
 import type { ResumeData } from '@/lib/types';
 import Image from 'next/image';
 import { ResumePageBreak } from '../ResumePageBreak';
+import { LanguageProficiency } from './LanguageProficiency';
 
 export const CorporateTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
@@ -88,9 +89,9 @@ export const CorporateTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
           <h3 className="text-sm font-bold uppercase tracking-wider pb-1.5 mb-3 border-b-[2.5px]" style={{ color: `hsl(${themeColor})`, borderColor: `hsl(${themeColor})` }}>{t('languages')}</h3>
           <ul className="text-sm text-gray-700 space-y-1.5">
             {languages.map(lang => (
-              <li key={lang.id} className="flex justify-between gap-x-4">
+              <li key={lang.id}>
                 <span className="font-semibold">{lang.name}</span>
-                <span className="text-gray-500">{t(lang.proficiency.toLowerCase())}</span>
+                <LanguageProficiency proficiency={lang.proficiency} themeColor={themeColor} className="mt-1" />
               </li>
             ))}
           </ul>

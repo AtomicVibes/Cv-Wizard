@@ -1,19 +1,9 @@
 import type { ResumeData } from '@/lib/types';
 import { Mail, Phone, MapPin, Briefcase, GraduationCap, Sparkles, Trophy, UserCheck } from 'lucide-react';
 import Image from 'next/image';
-import { Progress } from '../ui/progress';
+import { LanguageProficiency } from './LanguageProficiency';
 
-const proficiencyToValue = (proficiency: 'Beginner' | 'Intermediate' | 'Advanced' | 'Native') => {
-  switch (proficiency) {
-    case 'Beginner': return 25;
-    case 'Intermediate': return 50;
-    case 'Advanced': return 75;
-    case 'Native': return 100;
-    default: return 0;
-  }
-}
-
-export const GolfTemplate = ({ data, t, fontFamily }: { data: ResumeData, t: (key: string) => string; fontFamily: string; }) => {
+export const GolfTemplate = ({ data, t, fontFamily, themeColor }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
 
   return (
@@ -116,8 +106,8 @@ export const GolfTemplate = ({ data, t, fontFamily }: { data: ResumeData, t: (ke
                <ul className="text-sm space-y-3">
                 {languages.map(lang => (
                   <li key={lang.id}>
-                    <p className='mb-1 font-semibold'>{lang.name} - <span className='font-medium text-gray-600 text-xs'>{t(lang.proficiency.toLowerCase())}</span></p>
-                    <Progress value={proficiencyToValue(lang.proficiency)} className="h-1.5 bg-green-100 [&>div]:bg-green-700" />
+                    <p className='mb-1 font-semibold'>{lang.name}</p>
+                    <LanguageProficiency proficiency={lang.proficiency} themeColor={themeColor} />
                   </li>
                 ))}
               </ul>

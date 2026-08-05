@@ -1,17 +1,7 @@
 import type { ResumeData } from '@/lib/types';
 import { Mail, Phone, MapPin, Briefcase, GraduationCap, Sparkles, Trophy, UserCheck } from 'lucide-react';
 import Image from 'next/image';
-import { Progress } from '../ui/progress';
-
-const proficiencyToValue = (proficiency: 'Beginner' | 'Intermediate' | 'Advanced' | 'Native') => {
-  switch (proficiency) {
-    case 'Beginner': return 25;
-    case 'Intermediate': return 50;
-    case 'Advanced': return 75;
-    case 'Native': return 100;
-    default: return 0;
-  }
-}
+import { LanguageProficiency } from './LanguageProficiency';
 
 const GolfBallIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-blue-800/80">
@@ -30,7 +20,7 @@ const Section = ({ icon, title, children, className }: { icon: React.ReactNode, 
 );
 
 
-export const GolfTemplate2 = ({ data, t, fontFamily }: { data: ResumeData, t: (key: string) => string; fontFamily: string; }) => {
+export const GolfTemplate2 = ({ data, t, fontFamily, themeColor }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
 
   return (
@@ -108,8 +98,8 @@ export const GolfTemplate2 = ({ data, t, fontFamily }: { data: ResumeData, t: (k
                     {languages.map(lang => (
                         <li key={lang.id}>
                            <div>
-                            <p className='font-semibold'>{lang.name} - <span className='text-xs text-gray-500 font-normal'>{t(lang.proficiency.toLowerCase())}</span></p>
-                            <Progress value={proficiencyToValue(lang.proficiency)} className="h-2 mt-1 bg-blue-100 [&>div]:bg-blue-800" />
+                            <p className='font-semibold'>{lang.name}</p>
+                            <LanguageProficiency proficiency={lang.proficiency} themeColor={themeColor} className="mt-1" />
                            </div>
                         </li>
                     ))}

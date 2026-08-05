@@ -1,19 +1,9 @@
 import type { ResumeData } from '@/lib/types';
 import Image from 'next/image';
 import { Mail, Phone, MapPin, Briefcase, GraduationCap, Sparkles, Languages as LanguagesIcon, FileText } from 'lucide-react';
-import { Progress } from '../ui/progress';
+import { LanguageProficiency } from './LanguageProficiency';
 
-const proficiencyToValue = (proficiency: 'Beginner' | 'Intermediate' | 'Advanced' | 'Native') => {
-  switch (proficiency) {
-    case 'Beginner': return 25;
-    case 'Intermediate': return 50;
-    case 'Advanced': return 75;
-    case 'Native': return 100;
-    default: return 0;
-  }
-}
-
-export const ModernTemplate2 = ({ data, t, fontFamily }: { data: ResumeData, t: (key: string) => string; fontFamily: string; }) => {
+export const ModernTemplate2 = ({ data, t, fontFamily, themeColor }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
   return (
     <div style={{ fontFamily }} className="bg-white text-gray-800 p-10 w-full aspect-[210/297] text-[10pt] leading-relaxed shadow-2xl rounded-lg">
@@ -92,8 +82,8 @@ export const ModernTemplate2 = ({ data, t, fontFamily }: { data: ResumeData, t: 
               <ul className="space-y-3 text-sm">
                 {languages.map(lang => (
                   <li key={lang.id}>
-                    <p className="mb-1">{lang.name}</p>
-                    <Progress value={proficiencyToValue(lang.proficiency)} className="h-2" />
+                    <p className="mb-1 font-medium">{lang.name}</p>
+                    <LanguageProficiency proficiency={lang.proficiency} themeColor={themeColor} />
                   </li>
                 ))}
               </ul>

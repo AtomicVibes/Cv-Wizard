@@ -1,6 +1,7 @@
 import type { ResumeData } from '@/lib/types';
 import Image from 'next/image';
 import { ResumePageBreak } from '../ResumePageBreak';
+import { LanguageProficiency } from './LanguageProficiency';
 
 export const CompactTemplate = ({ data, t, fontFamily, themeColor, fontSize }: { data: ResumeData, t: (key: string) => string; fontFamily: string; themeColor: string; fontSize: number; }) => {
   const { personalInfo, summary, experience, education, skills, languages } = data;
@@ -90,7 +91,7 @@ export const CompactTemplate = ({ data, t, fontFamily, themeColor, fontSize }: {
             {languages.map((lang, index) => (
               <li key={lang.id} className="inline">
                 <span className="font-medium">{lang.name}</span>
-                <span className="text-gray-500"> ({t(lang.proficiency.toLowerCase())})</span>
+                <LanguageProficiency proficiency={lang.proficiency} themeColor={themeColor} className="inline-flex align-middle ltr:ml-2 rtl:mr-2" />
                 {index < languages.length - 1 ? <span className="text-gray-400 mx-1.5">|</span> : ''}
               </li>
             ))}

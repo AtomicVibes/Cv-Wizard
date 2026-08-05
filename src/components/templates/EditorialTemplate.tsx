@@ -1,6 +1,7 @@
 import type { ResumeData } from '@/lib/types';
 import Image from 'next/image';
 import { ResumePageBreak } from '../ResumePageBreak';
+import { LanguageProficiency } from './LanguageProficiency';
 
 const serif = "'Playfair Display', Georgia, 'Times New Roman', serif";
 
@@ -104,9 +105,9 @@ export const EditorialTemplate = ({ data, t, fontFamily, themeColor, fontSize }:
           </h3>
           <ul className="text-sm text-gray-700 space-y-1.5">
             {languages.map(lang => (
-              <li key={lang.id} className="flex justify-between gap-x-4">
+              <li key={lang.id}>
                 <span className="font-medium" style={{ fontFamily: serif }}>{lang.name}</span>
-                <span className="text-gray-500 italic">{t(lang.proficiency.toLowerCase())}</span>
+                <LanguageProficiency proficiency={lang.proficiency} themeColor={themeColor} className="mt-1" />
               </li>
             ))}
           </ul>
